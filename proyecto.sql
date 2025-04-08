@@ -21,10 +21,10 @@ CREATE TABLE PRECIOS (
 
 CREATE TABLE PRODUCTOS (
     idProducto VARCHAR(5) NOT NULL,
-    idProveedor INTEGER,
+    idProveedor INTEGER NOT NULL,
     descripcion VARCHAR(100) NOT NULL,
-    idDetallePedido INTEGER,
-    idPedido INTEGER
+    idDetallePedido INTEGER NOT NULL,
+    idPedido INTEGER NOT NULL
 );
 
 CREATE TABLE TIPO_PRODUCTOS (
@@ -44,10 +44,10 @@ CREATE TABLE ENVIOS (
 CREATE TABLE VENTAS (
     idVenta INTEGER NOT NULL,
     fecha DATE NOT NULL,
-    idEmpleado VARCHAR(12),
-    idCliente INTEGER,
-    idEnvio INTEGER,
-    idFactura INTEGER
+    idEmpleado VARCHAR(12)  NOT NULL,
+    idCliente INTEGER NOT NULL,
+    idEnvio INTEGER NOT NULL,
+    idFactura INTEGER NOT NULL
 );
 
 CREATE TABLE VALORACIONES (
@@ -55,8 +55,8 @@ CREATE TABLE VALORACIONES (
     calificacion INTEGER NOT NULL,
     comentario VARCHAR(100) NOT NULL,
     fecha DATE NOT NULL,
-    idProducto VARCHAR(5),
-    idCliente INTEGER
+    idProducto VARCHAR(5) NOT NULL,
+    idCliente INTEGER NOT NULL
 );
 
 CREATE TABLE CLIENTES (
@@ -75,23 +75,23 @@ CREATE TABLE DETALLE_DE_VENTAS (
     idVenta INTEGER NOT NULL,
     cantidad INTEGER NOT NULL,
     precio INTEGER NOT NULL,
-    idProducto VARCHAR(5)
+    idProducto VARCHAR(5) NOT NULL
 );
 
 CREATE TABLE PEDIDOS (
     idPedido INTEGER NOT NULL,
     fecha DATE NOT NULL,
     estado CHAR(1) NOT NULL,
-    idProveedor INTEGER,
-    idEmpleado VARCHAR(12)
+    idProveedor INTEGER NOT NULL,
+    idEmpleado VARCHAR(12) NOT NULL
    
 );
 
 CREATE TABLE DETALLE_DE_PEDIDOS (
-    idDetalle INTEGER,
+    idDetalle INTEGER NOT NULL,
     cantidad INTEGER NOT NULL,
     precio INTEGER NOT NULL,
-    idPedido INTEGER
+    idPedido INTEGER NOT NULL
 );
 
 CREATE TABLE EMPLEADOS (
@@ -100,7 +100,7 @@ CREATE TABLE EMPLEADOS (
     cargo VARCHAR(2) NOT NULL,
     telefono INTEGER NOT NULL,
     correo VARCHAR(50) NOT NULL,
-    ciudad VARCHAR(10)
+    ciudad VARCHAR(20)
 );
 
 CREATE TABLE FACTURAS (
@@ -118,6 +118,7 @@ CREATE TABLE ELECTRONICAS (
     correo VARCHAR(50) NOT NULL,
     nombreEmpresa VARCHAR(20) NOT NULL
 );
+
 
 
 -- Atributos
@@ -260,191 +261,120 @@ ADD CONSTRAINT FK_fisicas_facturas FOREIGN KEY (idFactura) REFERENCES FACTURAS(i
 
 -- xTablas
 
-DROP TABLE PROVEEDORES;
 DROP TABLE PRECIOS;
-DROP TABLE PRODUCTOS;
 DROP TABLE TIPO_PRODUCTOS;
-DROP TABLE ENVIOS;
-DROP TABLE VENTAS;
 DROP TABLE VALORACIONES;
-DROP TABLE CLIENTES;
-DROP TABLE DETALLE_DE_VENTAS;
-DROP TABLE PEDIDOS;
-DROP TABLE DETALLE_DE_PEDIDOS;
-DROP TABLE EMPLEADOS;
-DROP TABLE FACTURAS;
 DROP TABLE FISICAS;
 DROP TABLE ELECTRONICAS;
+DROP TABLE DETALLE_DE_VENTAS;
+DROP TABLE PRODUCTOS;
+DROP TABLE DETALLE_DE_PEDIDOS;
+DROP TABLE VENTAS;
+DROP TABLE ENVIOS;
+DROP TABLE CLIENTES;    
+DROP TABLE PEDIDOS;
+DROP TABLE EMPLEADOS;
+DROP TABLE FACTURAS;
+DROP TABLE PROVEEDORES;
+
+
+-- Consultas
+
+
 
 
 -- PoblarOK
 
--- FACTURAS
-INSERT INTO FACTURAS (idFactura, fecha)
-VALUES (1, TO_DATE('2024-03-01', 'YYYY-MM-DD'));
+INSERT INTO FACTURAS VALUES (1, TO_DATE('2024-03-01', 'YYYY-MM-DD'));
+INSERT INTO FACTURAS VALUES (2, TO_DATE('2024-03-02', 'YYYY-MM-DD'));
+INSERT INTO FACTURAS VALUES (3, TO_DATE('2024-03-03', 'YYYY-MM-DD'));
 
-INSERT INTO FACTURAS (idFactura, fecha)
-VALUES (2, TO_DATE('2024-03-02', 'YYYY-MM-DD'));
+INSERT INTO EMPLEADOS VALUES ('E001', 'Cristian Torres', 'V', 3200000001, 'cristian.torres@email.com', 'Bogotá');
+INSERT INTO EMPLEADOS VALUES ('E002', 'Santiago Perdomo', 'A', 3200000002, 'santiago.perdomo@email.com', 'Medellín');
+INSERT INTO EMPLEADOS VALUES ('E003', 'Juan Arismendi', 'C', 3200000003, 'juan.arismendi@email.com', 'Cali');
 
-INSERT INTO FACTURAS (idFactura, fecha)
-VALUES (3, TO_DATE('2024-03-03', 'YYYY-MM-DD'));
+INSERT INTO CLIENTES VALUES (1, 'CC', '123456789', 'Felipe Calvache', 'Calle 123 #15-20', '3212554879', 'felipe.calvache@email.com', TO_DATE('1990-05-15', 'YYYY-MM-DD'));
+INSERT INTO CLIENTES VALUES (2, 'CC', '987654321', 'Laura Herrera', 'Calle 81 #5-38', '3102544528', 'laura.herrera@email.com', TO_DATE('1992-08-20', 'YYYY-MM-DD'));
+INSERT INTO CLIENTES VALUES (3, 'CC', '555555555', 'Hernan Sanchez', 'Carrera 30 #45-3', '3013333391', 'hernan.sanchez@email.com', TO_DATE('1988-12-30', 'YYYY-MM-DD'));
 
-INSERT INTO EMPLEADOS (idEmpleado, nombre, cargo, telefono, correo, ciudad)
-VALUES ('E001', 'Cristian Torres', 'V', 3200000001, 'cristian.torres@email.com', 'Bogotá');
+INSERT INTO ENVIOS VALUES (1, TO_DATE('2024-03-01', 'YYYY-MM-DD'), 'Servientrega', 15000, 'E', 'Calle 100 #10-10');
+INSERT INTO ENVIOS VALUES (2, TO_DATE('2024-03-05', 'YYYY-MM-DD'), 'Deprisa', 20000, 'P', 'Cra 20 #50-15');
+INSERT INTO ENVIOS VALUES (3, TO_DATE('2024-03-10', 'YYYY-MM-DD'), 'Envia', 18000, 'E', 'Av 68 #80-25');
 
-INSERT INTO EMPLEADOS (idEmpleado, nombre, cargo, telefono, correo, ciudad)
-VALUES ('E002', 'Santiago Perdomo', 'A', 3200000002, 'santiago.perdomo@email.com', 'Medellín');
+INSERT INTO PROVEEDORES VALUES (1, 'Bavaria', 'Zona Industrial Zona1', 601234567, 'contacto@bavaria.com');
+INSERT INTO PROVEEDORES VALUES (2, 'Interlicores', 'Carrera 50 #20-30', 601987654, 'ventas@interlicores.com');
+INSERT INTO PROVEEDORES VALUES (3, 'GlobalWine', 'Avenida El Dorado #10-12', 601555555, 'info@globalwine.com');
 
-INSERT INTO EMPLEADOS (idEmpleado, nombre, cargo, telefono, correo, ciudad)
-VALUES ('E003', 'Juan Arismendi', 'C', 3200000003, 'juan.arismendi@email.com', 'Cali');
+INSERT INTO PEDIDOS VALUES (1, TO_DATE('2024-02-25', 'YYYY-MM-DD'), 'P', 1, 'E001');
+INSERT INTO PEDIDOS VALUES (2, TO_DATE('2024-02-26', 'YYYY-MM-DD'), 'E', 2, 'E002');
+INSERT INTO PEDIDOS VALUES (3, TO_DATE('2024-02-27', 'YYYY-MM-DD'), 'P', 3, 'E003');
 
-INSERT INTO CLIENTES (idCliente, tipo, cedula, nombre, direccion, telefono, correo, fechaNacimiento)
-VALUES (1, 'CC', '123456789', 'Felipe Calvache', 'Calle 123 #15-20', '3212554879', 'felipe.calvache@email.com', TO_DATE('1990-05-15', 'YYYY-MM-DD'));
+INSERT INTO DETALLE_DE_PEDIDOS VALUES (1, 10, 1000000, 1);
+INSERT INTO DETALLE_DE_PEDIDOS VALUES (2, 5, 500000, 2);
+INSERT INTO DETALLE_DE_PEDIDOS VALUES (3, 15, 1500000, 3);
 
-INSERT INTO CLIENTES (idCliente, tipo, cedula, nombre, direccion, telefono, correo, fechaNacimiento)
-VALUES (2, 'CC', '987654321', 'Laura Herrera', 'Calle 81 #5-38', '3102544528', 'laura.herrera@email.com', TO_DATE('1992-08-20', 'YYYY-MM-DD'));
+INSERT INTO PRODUCTOS VALUES ('P001', 1, 'Whiskey Buchanans 12 años', 1, 1);
+INSERT INTO PRODUCTOS VALUES ('P002', 2, 'Vodka Smirnoff 750ml', 2, 2);
+INSERT INTO PRODUCTOS VALUES ('P003', 3, 'Tequila Don Julio Blanco', 3, 3);
 
-INSERT INTO CLIENTES (idCliente, tipo, cedula, nombre, direccion, telefono, correo, fechaNacimiento)
-VALUES (3, 'CC', '555555555', 'Hernan Sanchez', 'Carrera 30 #45-3', '3013333391', 'hernan.sanchez@email.com', TO_DATE('1988-12-30', 'YYYY-MM-DD'));
+INSERT INTO VENTAS VALUES (1, TO_DATE('2024-03-01', 'YYYY-MM-DD'), 'E001', 1, 1, 1);
+INSERT INTO VENTAS VALUES (2, TO_DATE('2024-03-02', 'YYYY-MM-DD'), 'E002', 2, 2, 2);
+INSERT INTO VENTAS VALUES (3, TO_DATE('2024-03-03', 'YYYY-MM-DD'), 'E003', 3, 3, 3);
 
-INSERT INTO ENVIOS (idEnvio, fechaEnvio, empresaTransporte, costoEnvio, estado, direccionEnvio)
-VALUES (1, TO_DATE('2024-03-01', 'YYYY-MM-DD'), 'Servientrega', 15000, 'E', 'Calle 100 #10-10');
+INSERT INTO DETALLE_DE_VENTAS VALUES (1, 1, 2, 120000, 'P001');
+INSERT INTO DETALLE_DE_VENTAS VALUES (2, 2, 1, 50000, 'P002');
+INSERT INTO DETALLE_DE_VENTAS VALUES (3, 3, 3, 75000, 'P003');
 
-INSERT INTO ENVIOS (idEnvio, fechaEnvio, empresaTransporte, costoEnvio, estado, direccionEnvio)
-VALUES (2, TO_DATE('2024-03-05', 'YYYY-MM-DD'), 'Deprisa', 20000, 'P', 'Cra 20 #50-15');
+INSERT INTO VALORACIONES VALUES (1, 5, 'Excelente producto', TO_DATE('2024-03-01', 'YYYY-MM-DD'), 'P001', 1);
+INSERT INTO VALORACIONES VALUES (2, 4, 'Muy bueno pero costoso', TO_DATE('2024-03-02', 'YYYY-MM-DD'), 'P002', 2);
+INSERT INTO VALORACIONES VALUES (3, 3, 'Regular, esperaba más', TO_DATE('2024-03-03', 'YYYY-MM-DD'), 'P003', 3);
 
-INSERT INTO ENVIOS (idEnvio, fechaEnvio, empresaTransporte, costoEnvio, estado, direccionEnvio)
-VALUES (3, TO_DATE('2024-03-10', 'YYYY-MM-DD'), 'Coordinadora', 18000, 'E', 'Av 68 #80-25');
+INSERT INTO FISICAS VALUES (1, '3101111111');
+INSERT INTO FISICAS VALUES (2, '3102222222');
+INSERT INTO FISICAS VALUES (3, '3103333333');
 
-INSERT INTO PROVEEDORES (idProveedor, nombre, direccion, telefono, correo)
-VALUES (1, 'Bavaria', 'Zona Industrial Zona1', 601234567, 'contacto@bavaria.com');
+INSERT INTO ELECTRONICAS VALUES (1, 'factura1@cliente.com', 'Empresa Uno');
+INSERT INTO ELECTRONICAS VALUES (2, 'factura2@cliente.com', 'Empresa Dos');
+INSERT INTO ELECTRONICAS VALUES (3, 'factura3@cliente.com', 'Empresa Tres');
 
-INSERT INTO PROVEEDORES (idProveedor, nombre, direccion, telefono, correo)
-VALUES (2, 'Interlicores', 'Carrera 50 #20-30', 601987654, 'ventas@interlicores.com');
+INSERT INTO PRECIOS VALUES (1, 'P001', 120000);
+INSERT INTO PRECIOS VALUES (2, 'P002', 50000);
+INSERT INTO PRECIOS VALUES (3, 'P003', 75000);
 
-INSERT INTO PROVEEDORES (idProveedor, nombre, direccion, telefono, correo)
-VALUES (3, 'GlobalWine', 'Avenida El Dorado #10-12', 601555555, 'info@globalwine.com');
-
-INSERT INTO PRODUCTOS (idProducto, idProveedor, descripcion, idDetallePedido, idPedido)
-VALUES ('P001', 1, 'Whiskey Buchanans 12 años', NULL, NULL);
-
-INSERT INTO PRODUCTOS (idProducto, idProveedor, descripcion, idDetallePedido, idPedido)
-VALUES ('P002', 2, 'Vodka Smirnoff 750ml', NULL, NULL);
-
-INSERT INTO PRODUCTOS (idProducto, idProveedor, descripcion, idDetallePedido, idPedido)
-VALUES ('P003', 3, 'Tequila Don Julio Blanco', NULL, NULL);
-
-INSERT INTO VENTAS (idVenta, fecha, idEmpleado, idCliente, idEnvio, idFactura)
-VALUES (1, TO_DATE('2024-03-01', 'YYYY-MM-DD'), 'E001', 1, 1, 1);
-
-INSERT INTO VENTAS (idVenta, fecha, idEmpleado, idCliente, idEnvio, idFactura)
-VALUES (2, TO_DATE('2024-03-02', 'YYYY-MM-DD'), 'E002', 2, 2, 2);
-
-INSERT INTO VENTAS (idVenta, fecha, idEmpleado, idCliente, idEnvio, idFactura)
-VALUES (3, TO_DATE('2024-03-03', 'YYYY-MM-DD'), 'E003', 3, 3, 3);
-
-INSERT INTO DETALLE_DE_VENTAS (idDetalleVenta, idVenta, cantidad, precio, idProducto)
-VALUES (1, 1, 2, 120000, 'P001');
-
-INSERT INTO DETALLE_DE_VENTAS (idDetalleVenta, idVenta, cantidad, precio, idProducto)
-VALUES (2, 2, 1, 50000, 'P002');
-
-INSERT INTO DETALLE_DE_VENTAS (idDetalleVenta, idVenta, cantidad, precio, idProducto)
-VALUES (3, 3, 3, 75000, 'P003');
-
-INSERT INTO VALORACIONES (idValoracion, calificacion, comentario, fecha, idProducto, idCliente)
-VALUES (1, 5, 'Excelente producto', TO_DATE('2024-03-01', 'YYYY-MM-DD'), 'P001', 1);
-
-INSERT INTO VALORACIONES (idValoracion, calificacion, comentario, fecha, idProducto, idCliente)
-VALUES (2, 4, 'Muy bueno pero costoso', TO_DATE('2024-03-02', 'YYYY-MM-DD'), 'P002', 2);
-
-INSERT INTO VALORACIONES (idValoracion, calificacion, comentario, fecha, idProducto, idCliente)
-VALUES (3, 3, 'Regular, esperaba más', TO_DATE('2024-03-03', 'YYYY-MM-DD'), 'P003', 3);
-
-INSERT INTO PEDIDOS (idPedido, fecha, estado, idProveedor, idEmpleado)
-VALUES (1, TO_DATE('2024-02-25', 'YYYY-MM-DD'), 'P', 1, 'E001');
-
-INSERT INTO PEDIDOS (idPedido, fecha, estado, idProveedor, idEmpleado)
-VALUES (2, TO_DATE('2024-02-26', 'YYYY-MM-DD'), 'E', 2, 'E002');
-
-INSERT INTO PEDIDOS (idPedido, fecha, estado, idProveedor, idEmpleado)
-VALUES (3, TO_DATE('2024-02-27', 'YYYY-MM-DD'), 'P', 3, 'E003');
-
-INSERT INTO DETALLE_DE_PEDIDOS (idDetalle, cantidad, precio, idPedido)
-VALUES (1, 10, 1000000, 1);
-
-INSERT INTO DETALLE_DE_PEDIDOS (idDetalle, cantidad, precio, idPedido)
-VALUES (2, 5, 500000, 2);
-
-INSERT INTO DETALLE_DE_PEDIDOS (idDetalle, cantidad, precio, idPedido)
-VALUES (3, 15, 1500000, 3);
-
-INSERT INTO FISICAS (idFactura, telefono)
-VALUES (1, '3101111111');
-
-INSERT INTO FISICAS (idFactura, telefono)
-VALUES (2, '3102222222');
-
-INSERT INTO FISICAS (idFactura, telefono)
-VALUES (3, '3103333333');
-
-INSERT INTO ELECTRONICAS (idFactura, correo, nombreEmpresa)
-VALUES (1, 'factura1@cliente.com', 'Empresa Uno');
-
-INSERT INTO ELECTRONICAS (idFactura, correo, nombreEmpresa)
-VALUES (2, 'factura2@cliente.com', 'Empresa Dos');
-
-INSERT INTO ELECTRONICAS (idFactura, correo, nombreEmpresa)
-VALUES (3, 'factura3@cliente.com', 'Empresa Tres');
-
-INSERT INTO PRECIOS (idProveedor, idProducto, precio)
-VALUES (1, 'P001', 120000);
-
-INSERT INTO PRECIOS (idProveedor, idProducto, precio)
-VALUES (2, 'P002', 50000);
-
-INSERT INTO PRECIOS (idProveedor, idProducto, precio)
-VALUES (3, 'P003', 75000);
-
-INSERT INTO TIPO_PRODUCTOS (idProveedor, tipoProducto)
-VALUES (1, 'Whiskey');
-
-INSERT INTO TIPO_PRODUCTOS (idProveedor, tipoProducto)
-VALUES (2, 'Vodka');
-
-INSERT INTO TIPO_PRODUCTOS (idProveedor, tipoProducto)
-VALUES (3, 'Tequila');
+INSERT INTO TIPO_PRODUCTOS VALUES (1, 'Whiskey');
+INSERT INTO TIPO_PRODUCTOS VALUES (2, 'Vodka');
+INSERT INTO TIPO_PRODUCTOS VALUES (3, 'Tequila');
 
 
 -- PoblarNoOK
 
-INSERT INTO EMPLEADOS (idEmpleado, nombre, cargo, telefono, correo, ciudad)
-VALUES ('E004', 'Carlos Ruiz', 'X', 3200000004, 'carlos.ruiz@email.com', 'Barranquilla');
+-- Se violo la restricción que pusimos sobre cargo, ya que cargo 'X' no existe
+-- CK.CARGO
+INSERT INTO EMPLEADOS ('E004', 'Carlos Ruiz', 'X', 3200000004, 'carlos.ruiz@email.com', 'Barranquilla');
 
-INSERT INTO DETALLE_DE_VENTAS (idDetalleVenta, idVenta, cantidad, precio, idProducto)
-VALUES (4, 1, -5, 120000, 'P001');
+-- Cantidad negativa
+INSERT INTO DETALLE_DE_VENTAS VALUES (5, 1, -5, 120000, 'P001');
 
-INSERT INTO DETALLE_DE_VENTAS (idDetalleVenta, idVenta, cantidad, precio, idProducto)
-VALUES (5, 2, 2, 0, 'P002');
+INSERT INTO DETALLE_DE_VENTAS VALUES (5, 2, 2, 0, 'P002');
 
 
 -- xPoblar
 
-DELETE FROM PROVEEDORES;
 DELETE FROM PRECIOS;
-DELETE FROM PRODUCTOS;
 DELETE FROM TIPO_PRODUCTOS;
-DELETE FROM ENVIOS;
-DELETE FROM VENTAS;
 DELETE FROM VALORACIONES;
-DELETE FROM CLIENTES;
-DELETE FROM DETALLE_DE_VENTAS;
-DELETE FROM PEDIDOS;
-DELETE FROM DETALLE_DE_PEDIDOS;
-DELETE FROM EMPLEADOS;
-DELETE FROM FACTURAS;
 DELETE FROM FISICAS;
 DELETE FROM ELECTRONICAS;
+DELETE FROM DETALLE_DE_VENTAS;
+DELETE FROM PRODUCTOS;
+DELETE FROM DETALLE_DE_PEDIDOS;
+DELETE FROM VENTAS;
+DELETE FROM ENVIOS;
+DELETE FROM CLIENTES;
+DELETE FROM PEDIDOS;
+DELETE FROM EMPLEADOS;
+DELETE FROM FACTURAS;
+DELETE FROM PROVEEDORES;
 
 
 
