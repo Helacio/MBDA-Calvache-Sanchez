@@ -229,7 +229,7 @@ ALTER TABLE PRODUCTOS
 ADD CONSTRAINT PK_productos PRIMARY KEY (idProducto);
 
 ALTER TABLE DetalleDeVentas
-ADD CONSTRAINT PK_DetalleDeVentas PRIMARY KEY (idDetalleVenta);
+ADD CONSTRAINT PK_DetalleDeVentas PRIMARY KEY (idDetalleVenta, idVenta);
 
 ALTER TABLE DetalleDePedidos
 ADD CONSTRAINT PK_DetalleDePedidos PRIMARY KEY (idDetalle, idPedido);
@@ -290,9 +290,6 @@ ADD CONSTRAINT FK_precios_proveedores FOREIGN KEY (idProveedor) REFERENCES PROVE
 
 ALTER TABLE PRECIOS
 ADD CONSTRAINT FK_precios_productos FOREIGN KEY (idProducto) REFERENCES PRODUCTOS(idProducto);
-
-ALTER TABLE DetalleDeVentas
-ADD CONSTRAINT FK_DetalleDeVentas_ventas FOREIGN KEY (idDetalleVenta) REFERENCES VENTAS(idVenta);
 
 ALTER TABLE DetalleDeVentas
 ADD CONSTRAINT FK_DetalleDeVentas_productos FOREIGN KEY (idProducto) REFERENCES PRODUCTOS(idProducto);
@@ -377,13 +374,13 @@ INSERT INTO ENVIOS VALUES (1, TO_DATE('2024-02-24', 'YYYY-MM-DD'), 'Deprisa', 10
 INSERT INTO SEDES VALUES (1, 'Calle 142 #9-19');
 
 -- EMPLEADOS
-INSERT INTO EMPLEADOS VALUES (10000, 'Felipe Calvache', 'A', '3233919833', 'felipecalvache@gmail.com', 'Bogotá', 1);
+INSERT INTO EMPLEADOS VALUES (10000, 'Felipe Calvache', 'A', '3233919833', 'felipecalvache@gmail.com', 'Bogotï¿½', 1);
 
 -- CLIENTES
 INSERT INTO CLIENTES VALUES (1, 'CE', '1001064920', 'Hernan Sanchez', NULL, '322778998', 'hernansanchez@hotmail.com', TO_DATE('2003-03-01', 'YYYY-MM-DD'));
 
 -- PRODUCTOS
-INSERT INTO PRODUCTOS VALUES ('UAC22', 'Aguardiente Antioqueño en botella');
+INSERT INTO PRODUCTOS VALUES ('UAC22', 'Aguardiente Antioqueï¿½o en botella');
 
 -- VENTAS
 INSERT INTO VENTAS VALUES (1, TO_DATE('2024-02-24', 'YYYY-MM-DD'), 1, 10000, 1, 1);
@@ -410,7 +407,7 @@ INSERT INTO ELECTRONICAS VALUES ('asic@gmail.com', 'ASIC Limitada', 1);
 INSERT INTO FISICAS VALUES ('3145559837', 1);
 
 -- VALORACIONES
-INSERT INTO VALORACIONES VALUES (1, 7, 'Muy bueno todo pero podría mejorar', TO_DATE('2024-01-02', 'YYYY-MM-DD'), 1, 'UAC22');
+INSERT INTO VALORACIONES VALUES (1, 7, 'Muy bueno todo pero podrï¿½a mejorar', TO_DATE('2024-01-02', 'YYYY-MM-DD'), 1, 'UAC22');
 
 -- PRECIOS
 INSERT INTO PRECIOS VALUES (1, 'UAC22', 90000);
@@ -422,9 +419,9 @@ INSERT INTO PRECIOS VALUES (1, 'UAC22', 90000);
     PK_clientes */
 INSERT INTO CLIENTES VALUES (1, 'CE', '1001064920', 'Hernan Sanchez', NULL, '322778998', 'hernansanchez@hotmail.com', TO_DATE('2003-03-01', 'YYYY-MM-DD'));
 
-/*  Al intentar ingresar un empleado sin un nombre no no lo permitirá
+/*  Al intentar ingresar un empleado sin un nombre no no lo permitirï¿½
     NULIDAD */
-INSERT INTO EMPLEADOS VALUES (10000, NULL, 'A', '3233919833', 'felipecalvache@gmail.com', 'Bogotá', 1);
+INSERT INTO EMPLEADOS VALUES (10000, NULL, 'A', '3233919833', 'felipecalvache@gmail.com', 'Bogotï¿½', 1);
 
 /*  Al ingresar un precio negativo no lo permite
     CK_Tmoneda_precios  */
