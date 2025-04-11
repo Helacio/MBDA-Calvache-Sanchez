@@ -359,7 +359,32 @@ DROP TABLE FACTURAS;
 
 -- Consultas
 
+-- Consultar precios de productos
+SELECT P.idProducto, P.descripcion,(precio * 1.1) AS PrecioVenta
+FROM PRODUCTOS P
+JOIN PRECIOS PRE ON P.idProducto = PRE.idProducto;
 
+-- Consultar los pedidos activos
+SELECT idPedido, fecha, estado, idProveedor
+FROM PEDIDOS
+WHERE estado = 'P' OR estado = 'D';
+
+-- Consultar mejor proveedor para cada producto
+SELECT PRO.idProveedor, PRO.nombre, P.descripcion, MIN(PRE.precio) AS PrecioMinimo
+FROM PROVEEDORES PRO
+JOIN PRECIOS PRE ON PRO.idProveedor = PRE.idProveedor
+JOIN PRODUCTOS P ON P.idProducto = PRE.idProducto
+GROUP BY PRO.idProveedor, PRO.nombre, P.descripcion;
+
+-- Consultar la lista de empleados
+SELECT *
+FROM EMPLEADOS;
+
+-- Consultar las valoraciones de los clientes
+SELECT idValoracion, calificacion, comentario, descripcion, fecha
+FROM VALORACIONES V
+JOIN PRODUCTOS PRO ON PRO.idProducto = V.idProducto
+ORDER BY calificacion ASC;
 
 
 -- PoblarOK
@@ -471,15 +496,16 @@ INSERT INTO PRECIOS VALUES (3, 'TDJ12', 270000);
 INSERT INTO PRECIOS VALUES (4, 'WOP23', 140000);
 INSERT INTO PRECIOS VALUES (5, 'VAA64', 80000);
 
+
 -- PoblarNoOK
 
 /*  Al intentar insertar al mismo cliente no nos deja porque ya existe
     PK_clientes */
 INSERT INTO CLIENTES VALUES (1, 'CE', '1001064920', 'Hernan Sanchez', NULL, '322778998', 'hernansanchez@hotmail.com', TO_DATE('2003-03-01', 'YYYY-MM-DD'));
 
-/*  Al intentar ingresar un empleado sin un nombre no no lo permitir�
+/*  Al intentar ingresar un empleado sin un nombre no no lo permitirá
     NULIDAD */
-INSERT INTO EMPLEADOS VALUES (10000, NULL, 'A', '3233919833', 'felipecalvache@gmail.com', 'Bogot�', 1);
+INSERT INTO EMPLEADOS VALUES (10000, NULL, 'A', '3233919833', 'felipecalvache@gmail.com', 'Bogotá', 1);
 
 /*  Al ingresar un precio negativo no lo permite
     CK_Tmoneda_precios  */
