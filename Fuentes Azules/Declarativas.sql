@@ -20,7 +20,9 @@ CREATE TABLE TipoProductos (
 
 CREATE TABLE PRODUCTOS (
     idProducto VARCHAR(5) NOT NULL,
-    descripcion VARCHAR(100) NOT NULL
+    descripcion VARCHAR(100) NOT NULL,
+    precioCompra INTEGER NOT NULL,
+    PrecioVenta INTEGER NOT NULL
 );
 
 CREATE TABLE PRECIOS (
