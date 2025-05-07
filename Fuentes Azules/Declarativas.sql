@@ -22,7 +22,7 @@ CREATE TABLE PRODUCTOS (
     idProducto VARCHAR(5) NOT NULL,
     descripcion VARCHAR(100) NOT NULL,
     precioCompra INTEGER NOT NULL,
-    PrecioVenta INTEGER NOT NULL
+    precioVenta INTEGER NOT NULL
 );
 
 CREATE TABLE PRECIOS (
@@ -99,7 +99,7 @@ CREATE TABLE EMPLEADOS (
     cargo VARCHAR(2) NOT NULL,
     telefono VARCHAR(10) NOT NULL,
     correo VARCHAR(50) NOT NULL,
-    ciudad VARCHAR(10),
+    ciudad VARCHAR(20),
     idSede INTEGER NOT NULL
 );
 
@@ -204,6 +204,9 @@ ADD CONSTRAINT CK_Tmoneda_DetalleDeVentas CHECK (precio > 0);
 ALTER TABLE ENVIOS
 ADD CONSTRAINT CK_Tmoneda_envios CHECK (costoEnvio > 0);
 
+ALTER TABLE PRODUCTOS
+ADD CONSTRAINT CK_Tmoneda_productos CHECK (precioCompra > 0 AND precioVenta > 0);
+
 -- Tpositivo
 ALTER TABLE DetalleDePedidos
 ADD CONSTRAINT CK_Tpositivo_DetalleDePedidos CHECK (cantidad > 0);
@@ -297,7 +300,7 @@ ALTER TABLE DetalleDeVentas
 ADD CONSTRAINT FK_DetalleDeVentas_productos FOREIGN KEY (idProducto) REFERENCES PRODUCTOS(idProducto);
 
 ALTER TABLE DetalleDeVentas
-ADD CONSTRAINT FK_DetalleDeVentas_ventas2 FOREIGN KEY (idVenta) REFERENCES VENTAS(idVenta);
+ADD CONSTRAINT FK_DetalleDeVentas_ventas FOREIGN KEY (idVenta) REFERENCES VENTAS(idVenta);
 
 ALTER TABLE DetalleDePedidos
 ADD CONSTRAINT FK_DetalleDePedidos_pedidos FOREIGN KEY (idPedido) REFERENCES PEDIDOS(idPedido);
@@ -361,10 +364,10 @@ DROP TABLE FACTURAS;
 
 -- Consultas
 
--- Consultar precios de productos
-SELECT P.idProducto, P.descripcion,(precio * 1.1) AS PrecioVenta
-FROM PRODUCTOS P
-JOIN PRECIOS PRE ON P.idProducto = PRE.idProducto;
+-- Consultar precios de productos en la tienda
+SELECT idProducto, descripcion, precioVenta
+FROM PRODUCTOS;
+
 
 -- Consultar los pedidos activos
 SELECT idPedido, fecha, estado, idProveedor
@@ -427,11 +430,11 @@ INSERT INTO CLIENTES VALUES (4, 'NIT', 1000124431, 'Juan Arismendi', 'Av 78', '3
 INSERT INTO CLIENTES VALUES (5, 'P', 1002154712, 'Fabiana Forero', 'Transv 10', '3185678901', 'fabiana@mail.com', TO_DATE('1992-12-05', 'YYYY-MM-DD'));
 
 -- PRODUCTOS
-INSERT INTO PRODUCTOS VALUES ('UAC22', 'Aguardiente Antioqueño 375ml');
-INSERT INTO PRODUCTOS VALUES ('RMA78', 'Ron Medellín 8 años 750ml', 77000);
-INSERT INTO PRODUCTOS VALUES ('TDJ12', 'Tequila Don Julio Reposado Reserva700 ml');
-INSERT INTO PRODUCTOS VALUES ('WOP23', 'Whisky Old Parr 12 Años 750 ml');
-INSERT INTO PRODUCTOS VALUES ('VAA64', 'Vodka Absolut Azul 700 ml');
+INSERT INTO PRODUCTOS VALUES ('UAC22', 'Aguardiente Antioqueño 375ml', 25000, 27500);
+INSERT INTO PRODUCTOS VALUES ('RMA78', 'Ron Medellín 8 años 750ml', 70000, 77000);
+INSERT INTO PRODUCTOS VALUES ('TDJ12', 'Tequila Don Julio Reposado Reserva700 ml', 270000, 297000);
+INSERT INTO PRODUCTOS VALUES ('WOP23', 'Whisky Old Parr 12 Años 750 ml', 140000, 154000);
+INSERT INTO PRODUCTOS VALUES ('VAA64', 'Vodka Absolut Azul 700 ml', 80000, 88000);
 
 -- VENTAS
 INSERT INTO VENTAS VALUES (1, TO_DATE('2024-02-24', 'YYYY-MM-DD'), 1, 10000, 1, 1);
@@ -497,7 +500,6 @@ INSERT INTO PRECIOS VALUES (2, 'RMA78', 70000);
 INSERT INTO PRECIOS VALUES (3, 'TDJ12', 270000);
 INSERT INTO PRECIOS VALUES (4, 'WOP23', 140000);
 INSERT INTO PRECIOS VALUES (5, 'VAA64', 80000);
-
 
 
 -- PoblarNoOK
