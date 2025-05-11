@@ -42,7 +42,7 @@ CREATE TABLE DetalleDePedidos (
 CREATE TABLE ENVIOS (
     idEnvio INTEGER NOT NULL,
     fechaEnvio DATE NOT NULL,
-    empresaTransporte VARCHAR(12) NOT NULL,
+    empresaTransporte VARCHAR(12),
     costoEnvio INTEGER NOT NULL,
     estado CHAR(1) NOT NULL,
     direccionEnvio VARCHAR(30) NOT NULL
@@ -368,7 +368,6 @@ DROP TABLE FACTURAS;
 SELECT idProducto, descripcion, precioVenta
 FROM PRODUCTOS;
 
-
 -- Consultar los pedidos activos
 SELECT idPedido, fecha, estado, idProveedor
 FROM PEDIDOS
@@ -406,7 +405,7 @@ INSERT INTO ENVIOS VALUES (1, TO_DATE('2024-02-24', 'YYYY-MM-DD'), 'Deprisa', 10
 INSERT INTO ENVIOS VALUES (2, TO_DATE('2025-04-01', 'YYYY-MM-DD'), 'Servientrega', 11000, 'P', 'Calle 123 #45-67');
 INSERT INTO ENVIOS VALUES (3, TO_DATE('2025-04-03', 'YYYY-MM-DD'), 'Envia', 7500, 'D', 'Cra 10 #20-30');
 INSERT INTO ENVIOS VALUES (4, TO_DATE('2025-04-04', 'YYYY-MM-DD'), 'Deprisa', 8000, 'E', 'Av El Dorado 742');
-INSERT INTO ENVIOS VALUES (5, TO_DATE('2025-04-05', 'YYYY-MM-DD'), 'Servientrega', 6500, 'C', 'Calle 129 #13-23');
+INSERT INTO ENVIOS VALUES (5, TO_DATE('2025-04-05', 'YYYY-MM-DD'), NULL, 6500, 'C', 'Calle 129 #13-23');
 
 -- SEDES
 INSERT INTO SEDES VALUES (1, 'Calle 142 #9-19');
