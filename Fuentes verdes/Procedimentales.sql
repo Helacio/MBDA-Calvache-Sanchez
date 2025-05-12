@@ -9,19 +9,19 @@ ALTER TABLE DetalleDeVentas DROP CONSTRAINT FK_DetalleDeVentas_ventas;
 ALTER TABLE DetalleDePedidos DROP CONSTRAINT FK_DetalleDePedidos_pedidos;
 ALTER TABLE VALORACIONES DROP CONSTRAINT FK_valoraciones_clientes;
 ALTER TABLE PEDIDOS DROP CONSTRAINT FK_pedidos_proveedores;
-
+ALTER TABLE VENTAS DROP CONSTRAINT FK_ventas_envios;
 
 -- Tuplas
 
 --Si el estado del envio = 'C' entonces empresaTransporte = null
 ALTER TABLE ENVIOS
-ADD CONSTRAINT CK_estado_transporte CHECK (NOT (estado = 'c' AND empresaTransporte IS NOT NULL));
+ADD CONSTRAINT CK_estado_transporte CHECK (NOT (estado = 'C' AND empresaTransporte IS NOT NULL));
 
 -- Si el cliente tiene cedula entonces el numero debe empezar por '1'
 ALTER TABLE CLIENTES
 ADD CONSTRAINT CK_tipo_numero CHECK ((tipo <> 'CC') OR (numero LIKE '1%'));
 
--- Si el cliente es una empresa entonces la direcci�n no puede ser desconocida
+-- Si el cliente es una empresa entonces la direcciOn no puede ser desconocida
 ALTER TABLE CLIENTES
 ADD CONSTRAINT CK_tipo_direccion CHECK (NOT (tipo = 'NIT' AND direccion IS NULL));
 
@@ -29,24 +29,24 @@ ADD CONSTRAINT CK_tipo_direccion CHECK (NOT (tipo = 'NIT' AND direccion IS NULL)
 -- Acciones
 
 -- Si eliminamos ventas, tambien se deben eliminar los detalles de ventas asociados
-
 ALTER TABLE DetalleDeVentas
 ADD CONSTRAINT FK_DetalleDeVentas_ventas FOREIGN KEY (idVenta) REFERENCES VENTAS(idVenta) ON DELETE CASCADE;
 
 -- Si eliminamos un pedido, tambien se deben eliminar los detalles de pedido asociados
-
 ALTER TABLE DetalleDePedidos
 ADD CONSTRAINT FK_DetalleDePedidos_pedidos FOREIGN KEY (idPedido) REFERENCES PEDIDOS(idPedido) ON DELETE CASCADE;
 
 -- Si eliminamos un cliente queremos que su valoracion asociada quede desconocida
-
 ALTER TABLE VALORACIONES
-ADD CONSTRAINT FK_valoraciones_clientes FOREIGN KEY (idCliente) REFERENCES CLIENTES(idCliente) ON DELETE SET NULL;
+ADD CONSTRAINT FK_valoraciones_clientes FOREIGN KEY (idCliente) REFERENCES CLIENTES(idCliente) ON DELETE CASCADE;
 
 -- Si eliminamos a un proveedor tambien se tienen que eliminar los pedidos asociados
-
 ALTER TABLE PEDIDOS
 ADD CONSTRAINT FK_pedidos_proveedores FOREIGN KEY (idProveedor) REFERENCES PROVEEDORES(idProveedor) ON DELETE CASCADE;
+
+-- Si eliminamos un envio, también se tienen que eliminar sus ventas asociadas
+ALTER TABLE VENTAS
+ADD CONSTRAINT FK_ventas_envios FOREIGN KEY (idEnvio) REFERENCES ENVIOS(idEnvio);
 
 
 -- Disparadores
@@ -87,12 +87,7 @@ CREATE OR REPLACE TRIGGER TG_DetalleDeVentas
                 RAISE_APPLICATION_ERROR(-20002, 'El precio a insertar debe ser igual al precio de venta del producto');
             END IF;
         END IF;
-
-        -- No se permite eliminar detalle de venta
-        IF DELETING THEN
-            RAISE_APPLICATION_ERROR(-20004, 'No se permite eliminar los detalles de venta');
-        END IF;
-    END;
+END;
 /
 
 -- Productos
@@ -227,11 +222,11 @@ DROP TRIGGER TG_Envios;
 
 -- TuplasOK
 
-INSERT INTO ENVIOS VALUES (2, TO_DATE('2024-02-24', 'YYYY-MM-DD'), NULL, 100000, 'C', 'Calle 1 #7-39');
+INSERT INTO ENVIOS VALUES (6, TO_DATE('2024-02-24', 'YYYY-MM-DD'), NULL, 100000, 'C', 'Calle 1 #7-39');
 
-INSERT INTO CLIENTES VALUES (2, 'CC', '1001080020', 'Carlos Garcia', NULL, '322778998', 'carlosgarcia@hotmail.com', TO_DATE('2003-03-01', 'YYYY-MM-DD'));
+INSERT INTO CLIENTES VALUES (6, 'CC', '1001080020', 'Carlos Garcia', NULL, '322778998', 'carlosgarcia@hotmail.com', TO_DATE('2003-03-01', 'YYYY-MM-DD'));
 
-INSERT INTO CLIENTES VALUES (3, 'NIT', '1001562920', 'Cristian Fajardo', 'calle 32 #7-14', '322778998', 'cristianfajardo@hotmail.com', TO_DATE('2003-03-01', 'YYYY-MM-DD'));
+INSERT INTO CLIENTES VALUES (7, 'NIT', '1001562920', 'Oracle SAS', 'calle 32 #7-14', '322778998', 'cristianfajardo@hotmail.com', TO_DATE('2003-03-01', 'YYYY-MM-DD'));
 
 
 -- TuplasNoOK
@@ -280,29 +275,50 @@ DELETE FROM CLIENTES WHERE idCliente = 1;
 
 -- 4)
 SELECT *
-FROM PROVEEDORES;
+FROM ENVIOS;
 
 SELECT *
-FROM PEDIDOS;
+FROM VENTAS;
 
-DELETE FROM PROVEEDORES WHERE idProveedor = 1;
+DELETE FROM VENTAS WHERE idEnvio = 2;
 
 
 -- DisparadoresOK
 
 -- 1) Se genera el ID de PRODUCTOS de manera automática
+SELECT *
+FROM PRODUCTOS;
+
 INSERT INTO PRODUCTOS (descripcion, precioCompra, precioVenta) VALUES ('Bacardi Toronja 250 ml', 60000, 67000);
 
 -- 2) El precio de venta es el correcto en DetalleDeVentas
-INSERT INTO DetalleDeVentas VALUES (3, 1, 27500, 'UAC22', 1);
+SELECT *
+FROM DetalleDeVentas;
+
+SELECT *
+FROM PRODUCTOS;
+
+INSERT INTO DetalleDeVentas VALUES (6, 1, 27500, 'UAC22', 5);
 
 -- 3) Ventas a mayores de edad
+SELECT *
+FROM VENTAS;
+
+SELECT *
+FROM CLIENTES;
+
 INSERT INTO VENTAS VALUES (5, TO_DATE('2025-04-01', 'YYYY-MM-DD'), 3, 10000, 1, NULL);
 
 -- 4) Insertar pedido estado por defecto = 'p'
+SELECT *
+FROM PEDIDOS;
+
 INSERT INTO PEDIDOS VALUES (1, TO_DATE('2025-03-15', 'YYYY-MM-DD'), NULL, 2, 10001);
 
 -- 5) Insertar envio se genera un costo aleatorio
+SELECT *
+FROM ENVIOS;
+
 INSERT INTO ENVIOS VALUES (1, TO_DATE('2025-01-01', 'YYYY-MM-DD'), 'Envia', 0, 'P', 'Calle 13 #12-23');
 
 
@@ -316,6 +332,3 @@ INSERT INTO DetalleDeVentas VALUES (3, 1, 5000, 'UAC22', 1);
 
 -- 3) El producto a insertar debe existir en PRODUCTOS
 INSERT INTO DetalleDeVentas VALUES (3, 1, 40000, 'XLR03', 1);
-
--- 4) Eliminar un detalle de venta
-DELETE DetalleDeVentas WHERE idDetalleVenta = 1;
