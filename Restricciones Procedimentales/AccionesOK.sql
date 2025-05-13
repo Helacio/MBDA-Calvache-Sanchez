@@ -1,0 +1,43 @@
+/* SQL PROYECTO
+    Felipe Calvache - Hernan Sanchez
+*/
+
+
+-- AccionesOK
+
+-- 1)
+SELECT *
+FROM VENTAS;
+
+SELECT *
+FROM DetalleDeVentas;
+
+DELETE FROM VENTAS WHERE idVenta = 1;
+
+-- 2)
+SELECT *
+FROM PEDIDOS;
+
+SELECT *
+FROM DetalleDePedidos;
+
+DELETE FROM PEDIDOS WHERE idPedido = 1;
+
+-- 3)
+SELECT *
+FROM CLIENTES;
+
+SELECT *
+FROM VALORACIONES;
+
+DELETE FROM CLIENTES WHERE idCliente = 1;
+
+-- 4)
+SELECT *
+FROM ENVIOS;
+
+SELECT *
+FROM VENTAS;
+
+DELETE FROM VENTAS WHERE idEnvio = 2;
+

@@ -1,0 +1,18 @@
+/* SQL PROYECTO
+    Felipe Calvache - Hernan Sanchez
+*/
+
+
+-- Unicas
+
+ALTER TABLE PROVEEDORES
+ADD CONSTRAINT UK_proveedores UNIQUE (correo);
+
+ALTER TABLE EMPLEADOS
+ADD CONSTRAINT UK_empleados UNIQUE (correo);
+
+ALTER TABLE ELECTRONICAS
+ADD CONSTRAINT UK_electronicas UNIQUE (correo);
+
+ALTER TABLE CLIENTES
+ADD CONSTRAINT UK_clientes UNIQUE (numero, correo);
