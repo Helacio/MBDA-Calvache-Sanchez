@@ -5,7 +5,7 @@
 
 -- Vistas
 
--- Vista que muestra los mejores precios que ofrecen los proveedores
+-- Vista que muestra el mejor proveedor para cada producto
 CREATE VIEW MejorProveedor AS
     SELECT PRO.idProveedor, PRO.nombre, P.descripcion, MIN(PRE.precio) AS PrecioMinimo
     FROM PROVEEDORES PRO
@@ -20,7 +20,7 @@ CREATE VIEW pedidos_pendientes_proveedor AS
     JOIN PROVEEDORES pr ON pe.idProveedor = pr.idProveedor
     WHERE pe.estado = 'P';
 
--- Vista que muestra las valoraciones de los clientes
+-- Vista que muestra las valoraciones mas bajas de los clientes
 CREATE VIEW valoraciones_clientes AS
     SELECT idValoracion, calificacion, comentario, descripcion, fecha
     FROM VALORACIONES V
