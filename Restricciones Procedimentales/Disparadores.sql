@@ -7,7 +7,7 @@
 
 -- Detalle de ventas
 CREATE OR REPLACE TRIGGER TG_DetalleDeVentas
-    BEFORE INSERT OR UPDATE OR DELETE
+    BEFORE INSERT OR UPDATE
     ON DetalleDeVentas
     FOR EACH ROW
     DECLARE
@@ -59,11 +59,6 @@ BEGIN
         v_letras := DBMS_RANDOM.STRING('U', 3);
         v_numeros := LPAD(TRUNC(DBMS_RANDOM.VALUE(0, 100)), 2, '0');
         :New.idProducto := v_letras || v_numeros;
-
-    -- Validar precio de venta -- El precio de venta no puede ser menor a la de su compra
-        IF :NEW.precioVenta < :NEW.precioCompra THEN
-            RAISE_APPLICATION_ERROR(-20001, 'El precio de venta no puede ser menor al precio de compra');
-        END IF;
     END IF;
         
     IF UPDATING THEN
@@ -131,7 +126,6 @@ END;
 /
 
 -- Envio
-
 CREATE TRIGGER TG_Envios
     BEFORE INSERT OR UPDATE
     ON ENVIOS
