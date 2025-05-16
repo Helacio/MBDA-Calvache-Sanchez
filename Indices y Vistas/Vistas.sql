@@ -13,12 +13,10 @@ CREATE VIEW MejorProveedor AS
     JOIN PRODUCTOS P ON P.idProducto = PRE.idProducto
     GROUP BY PRO.idProveedor, PRO.nombre, P.descripcion;
 
--- Vista que muestra los pedidos pendientes de los proveedores
-CREATE VIEW pedidos_pendientes_proveedor AS
-    SELECT pr.idProveedor, pr.nombre AS proveedor, pe.idPedido, pe.fecha, pe.estado
-    FROM PEDIDOS pe
-    JOIN PROVEEDORES pr ON pe.idProveedor = pr.idProveedor
-    WHERE pe.estado = 'P';
+-- Vista que muestra la lista de empleados
+CREATE VIEW list_empleados AS 
+    SELECT *
+    FROM EMPLEADOS;
 
 -- Vista que muestra las valoraciones mas bajas de los clientes
 CREATE VIEW valoraciones_clientes AS
@@ -27,11 +25,26 @@ CREATE VIEW valoraciones_clientes AS
     JOIN PRODUCTOS PRO ON PRO.idProducto = V.idProducto
     ORDER BY calificacion ASC;
 
--- Vista que muestra los productos más vendidos
+-- Vista que muestra los precios de productos en la tienda
+CREATE VIEW preciosXproducto AS
+    SELECT idProducto, descripcion, precioVenta
+    FROM PRODUCTOS;
+
+-- Vista que muestra los pedidos pendientes de los proveedores
+CREATE VIEW pedidos_pendientes_proveedor AS
+    SELECT pr.idProveedor, pr.nombre AS proveedor, pe.idPedido, pe.fecha, pe.estado
+    FROM PEDIDOS pe
+    JOIN PROVEEDORES pr ON pe.idProveedor = pr.idProveedor
+    WHERE pe.estado = 'P';
+
+-- Vista que muestra los productos más vendidos (Consulta gerencial)
 CREATE VIEW productos_mas_vendidos AS
     SELECT p.idProducto, p.descripcion, SUM(dv.cantidad) AS total_vendido
     FROM PRODUCTOS p
     JOIN DetalleDeVentas dv ON p.idProducto = dv.idProducto
     GROUP BY p.idProducto, p.descripcion
     ORDER BY total_vendido DESC;
+
+
+
 

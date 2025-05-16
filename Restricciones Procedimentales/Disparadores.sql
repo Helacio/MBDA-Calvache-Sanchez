@@ -5,6 +5,37 @@
 
 -- Disparadores
 
+-- Ventas
+CREATE TRIGGER TG_Ventas
+    BEFORE INSERT OR UPDATE
+    ON VENTAS
+    FOR EACH ROW
+DECLARE
+    edad_meses INTEGER;
+    max_id_venta INTEGER;
+BEGIN
+    -- Validar edad
+    SELECT MONTHS_BETWEEN(SYSDATE, fechaNacimiento) INTO edad_meses
+    FROM CLIENTES
+    WHERE :NEW.idCliente = idCliente;
+    IF edad_meses < 18 * 12 THEN
+        RAISE_APPLICATION_ERROR(-20005, 'No se permite ventas a menores de edad');
+    END IF;
+    
+    -- Agregar ID automaticamente
+    IF INSERTING THEN
+        SELECT NVL(MAX(idVenta), 0) + 1 INTO max_id_venta FROM VENTAS;
+        :NEW.idVenta := max_id_venta;
+    END IF;
+    
+    -- No se permite actualizar una venta
+    IF UPDATING THEN
+        RAISE_APPLICATION_ERROR(-20006, 'No se permite modificar ventas realizadas');
+    END IF;
+END;
+/
+
+
 -- Detalle de ventas
 CREATE OR REPLACE TRIGGER TG_DetalleDeVentas
     BEFORE INSERT OR UPDATE
@@ -44,9 +75,10 @@ CREATE OR REPLACE TRIGGER TG_DetalleDeVentas
 END;
 /
 
+
 -- Productos
 CREATE TRIGGER TG_In_Productos
-    BEFORE INSERT OR UPDATE
+    BEFORE INSERT OR DELETE
     ON PRODUCTOS
     FOR EACH ROW
 DECLARE
@@ -60,44 +92,21 @@ BEGIN
         v_numeros := LPAD(TRUNC(DBMS_RANDOM.VALUE(0, 100)), 2, '0');
         :New.idProducto := v_letras || v_numeros;
     END IF;
-        
+
+    -- Valida que al actualizar el nuevo precio de Venta sea mayor a su costo  
     IF UPDATING THEN
         IF :NEW.precioVenta < :OLD.precioCompra THEN
             RAISE_APPLICATION_ERROR(-20001, 'El precio de venta no puede ser menor al precio de compra');
         END IF;
     END IF;
+
+    -- No se pueden eliminar los productos
+    IF DELETING THEN
+        RAISE_APPLICATION_ERROR(-200010, 'No se permiten eliminar productos');
+    END IF;
 END;
 /
 
--- Ventas
-CREATE TRIGGER TG_Ventas
-    BEFORE INSERT OR UPDATE
-    ON Ventas
-    FOR EACH ROW
-DECLARE
-    edad_meses INTEGER;
-    max_id_venta INTEGER;
-BEGIN
-    -- Validar edad
-    SELECT MONTHS_BETWEEN(SYSDATE, fechaNacimiento) INTO edad_meses
-    FROM CLIENTES
-    WHERE :NEW.idCliente = idCliente;
-    IF edad_meses < 18 * 12 THEN
-        RAISE_APPLICATION_ERROR(-20005, 'No se permite ventas a menores de edad');
-    END IF;
-    
-    -- Agregar ID automaticamente
-    IF INSERTING THEN
-        SELECT NVL(MAX(idVenta), 0) + 1 INTO max_id_venta FROM VENTAS;
-        :NEW.idVenta := max_id_venta;
-    END IF;
-    
-    -- No se permite actualizar una venta
-    IF UPDATING THEN
-        RAISE_APPLICATION_ERROR(-20006, 'No se permite modificar ventas realizadas');
-    END IF;
-END;
-/
 
 -- Pedidos
 CREATE TRIGGER TG_Pedidos
@@ -116,6 +125,7 @@ BEGIN
         -- Estado inicial 'P'
         :NEW.estado := 'P';
     ELSIF UPDATING THEN
+
         -- Calcular días pasados desde la fecha original
         SELECT TRUNC(SYSDATE - :OLD.fecha) INTO dias_pasados FROM DUAL;
         IF dias_pasados >= 8 THEN
@@ -125,7 +135,8 @@ BEGIN
 END;
 /
 
--- Envio
+
+-- Envios
 CREATE TRIGGER TG_Envios
     BEFORE INSERT OR UPDATE
     ON ENVIOS
@@ -151,10 +162,72 @@ BEGIN
 
     -- Validar estados permitidos al actualizar
     IF UPDATING THEN
-        IF :NEW.estado NOT IN ('P', 'D', 'E', 'C') THEN
-            RAISE_APPLICATION_ERROR(-20011, 'Estado de envío no válido. Solo se permite: P, D, E o C.');
+        RAISE_APPLICATION_ERROR(-20011, 'No se puede modificar un envío por seguridad');
+    END IF;
+END;
+/
+
+
+-- Clientes
+CREATE TRIGGER TG_Clientes
+    BEFORE INSERT OR UPDATE
+    ON CLIENTES
+    FOR EACH ROW
+DECLARE
+    max_id_clientes INTEGER;
+    v_numero_cliente INTEGER;
+BEGIN
+    IF INSERTING THEN
+        -- Generar ID automáticamente
+        SELECT NVL(MAX(idCliente), 0) + 1 INTO max_id_clientes FROM CLIENTES;
+        :NEW.idCliente := max_id_clientes;
+    END IF;
+
+    IF UPDATING THEN
+        -- No permite cambiar numero de cedula
+        SELECT numero INTO v_numero_cliente FROM CLIENTES WHERE numero = :NEW.numero;
+        IF :NEW.numero <> :OLD.numero THEN
+            RAISE_APPLICATION_ERROR(-20087, 'No se puede modificar cedula del cliente');
         END IF;
     END IF;
 END;
 /
+
+
+-- Proveedores
+CREATE TRIGGER TG_Proveedores
+    BEFORE INSERT OR DELETE
+    ON PROVEEDORES
+    FOR EACH ROW
+DECLARE
+    max_id_proveedores INTEGER;
+BEGIN
+    IF INSERTING THEN
+        -- Generar ID automáticamente
+        SELECT NVL(MAX(idProveedor), 0) + 1 INTO max_id_proveedores FROM PROVEEDORES;
+        :NEW.idProveedor := max_id_proveedores;
+    END IF;
+
+    IF DELETING THEN
+        -- No se pueden eliminar los proveedores
+        RAISE_APPLICATION_ERROR(-200010, 'No se permite eliminar los proveedores antiguos');
+    END IF;
+END;
+/
+
+
+-- Facturas
+CREATE TRIGGER TG_Facturas
+    BEFORE INSERT
+    ON FACTURAS
+    FOR EACH ROW
+DECLARE
+    max_id_facturas INTEGER;
+BEGIN
+    IF INSERTING THEN
+        -- Generar ID automáticamente
+        SELECT NVL(MAX(idFactura), 0) + 1 INTO max_id_facturas FROM FACTURAS;
+        :NEW.idFactura := max_id_facturas;
+    END IF;
+END;
 
