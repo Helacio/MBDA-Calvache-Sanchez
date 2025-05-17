@@ -274,7 +274,7 @@ END;
 
 -- Paquete de Proveedores
 CREATE OR REPLACE PACKAGE BODY PKG_Proveedores IS
-    PROCEDURE adionarProveedor(nombre VARCHAR, direccion VARCHAR, telefono VARCHAR, correo VARCHAR)
+    PROCEDURE adicionarProveedor(nombre VARCHAR, direccion VARCHAR, telefono VARCHAR, correo VARCHAR)
     IS
     BEGIN
         INSERT INTO PROVEEDORES(nombre, direccion, telefono, correo)
@@ -345,7 +345,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_Clientes IS
         INSERT INTO CLIENTES(tipo, numero, nombre, direccion, telefono, correo, fechaNacimiento)
         VALUES (tipo, numero, nombre, direccion, telefono, correo, fechaNacimiento);
         COMMIT;
-    EXCEPTION
+EXCEPTION
     WHEN OTHERS THEN
         ROLLBACK;
         RAISE_APPLICATION_ERROR(-20020, 'Error al adicionar el cliente');
@@ -362,7 +362,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_Clientes IS
         ROLLBACK;
         RAISE_APPLICATION_ERROR(-20021, 'Error al adicionar la valoracion');
     END;
-    PROCEDURE modificarCliente(Xcedula INTEGER, Xtipo CHAR, Xtelefono VARCHAR, Xdireccion VARCHAR, Xcorreo VARCHAR)
+    PROCEDURE modificarCliente(Xcedula INTEGER, Xtipo VARCHAR, Xtelefono VARCHAR, Xdireccion VARCHAR, Xcorreo VARCHAR)
     IS
     BEGIN
         UPDATE CLIENTES
@@ -402,11 +402,11 @@ CREATE OR REPLACE PACKAGE BODY PKG_Empleados IS
         RAISE_APPLICATION_ERROR(-20023, 'Error al adicionar el empleado');
     END;
     --
-    PROCEDURE adicionarSede(idSede INTEGER, direccion VARCHAR)
+    PROCEDURE adicionarSede(direccion VARCHAR)
     IS
     BEGIN
-        INSERT INTO SEDES(idSede, direccion)
-        VALUES (idSede, direccion);
+        INSERT INTO SEDES(direccion)
+        VALUES (direccion);
         COMMIT;
     EXCEPTION
     WHEN OTHERS THEN

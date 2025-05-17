@@ -159,11 +159,6 @@ BEGIN
         costo := ROUND(DBMS_RANDOM.VALUE(5000, 13000));
         :NEW.costoEnvio := costo;
     END IF;
-
-    -- Validar estados permitidos al actualizar
-    IF UPDATING THEN
-        RAISE_APPLICATION_ERROR(-20011, 'No se puede modificar un envío por seguridad');
-    END IF;
 END;
 /
 
@@ -175,7 +170,6 @@ CREATE TRIGGER TG_Clientes
     FOR EACH ROW
 DECLARE
     max_id_clientes INTEGER;
-    v_numero_cliente INTEGER;
 BEGIN
     IF INSERTING THEN
         -- Generar ID automáticamente
@@ -185,14 +179,12 @@ BEGIN
 
     IF UPDATING THEN
         -- No permite cambiar numero de cedula
-        SELECT numero INTO v_numero_cliente FROM CLIENTES WHERE numero = :NEW.numero;
         IF :NEW.numero <> :OLD.numero THEN
             RAISE_APPLICATION_ERROR(-20087, 'No se puede modificar cedula del cliente');
         END IF;
     END IF;
 END;
 /
-
 
 -- Proveedores
 CREATE TRIGGER TG_Proveedores
@@ -215,6 +207,7 @@ BEGIN
 END;
 /
 
+--Automatizaciones
 
 -- Facturas
 CREATE TRIGGER TG_Facturas
@@ -230,4 +223,54 @@ BEGIN
         :NEW.idFactura := max_id_facturas;
     END IF;
 END;
+/
 
+-- Detalle de pedidos
+CREATE TRIGGER TG_DetalleDePedidos
+    BEFORE INSERT
+    ON DetalleDePedidos
+    FOR EACH ROW
+DECLARE
+    max_id_detalle_pedido INTEGER;
+BEGIN
+    IF INSERTING THEN
+        -- Generar ID automáticamente
+        SELECT NVL(MAX(idDetalle), 0) + 1 INTO max_id_detalle_pedido FROM DetalleDePedidos;
+        :NEW.idDetalle := max_id_detalle_pedido;
+    END IF;
+END;
+/
+
+-- Valoraciones
+CREATE TRIGGER TG_Valoraciones
+    BEFORE INSERT
+    ON VALORACIONES
+    FOR EACH ROW
+DECLARE
+    max_id_valoraciones INTEGER;
+BEGIN
+    IF INSERTING THEN
+        -- Generar ID automáticamente
+        SELECT NVL(MAX(idValoracion), 0) + 1 INTO max_id_valoraciones FROM VALORACIONES;
+        :NEW.idValoracion := max_id_valoraciones;
+    END IF;
+END;
+/
+
+-- Sedes
+CREATE TRIGGER TG_Sedes
+    BEFORE INSERT
+    ON SEDES
+    FOR EACH ROW
+DECLARE
+    max_id_sedes INTEGER;
+BEGIN
+    IF INSERTING THEN
+        -- Generar ID automáticamente
+        SELECT NVL(MAX(idSede), 0) + 1 INTO max_id_sedes FROM SEDES;
+        :NEW.idSede := max_id_sedes;
+    END IF;
+END;
+/
+
+drop trigger TG_Sedes;

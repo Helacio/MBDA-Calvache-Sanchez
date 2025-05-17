@@ -13,4 +13,7 @@ DROP TRIGGER TG_Envios;
 DROP TRIGGER TG_Clientes;
 DROP TRIGGER TG_Proveedores;
 DROP TRIGGER TG_Facturas;
+DROP TRIGGER TG_DetalleDePedidos;
+DROP TRIGGER TG_Valoraciones;
+DROP TRIGGER TG_Sedes;
 
