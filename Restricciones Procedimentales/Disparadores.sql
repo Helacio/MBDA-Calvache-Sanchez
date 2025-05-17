@@ -273,4 +273,3 @@ BEGIN
 END;
 /
 
-drop trigger TG_Sedes;
