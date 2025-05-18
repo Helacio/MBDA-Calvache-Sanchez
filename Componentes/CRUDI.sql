@@ -34,6 +34,20 @@ CREATE OR REPLACE PACKAGE BODY PKG_Productos IS
             FROM PRODUCTOS;
         RETURN CURSOR_PRODUCTOS;
     END;
+    --
+    FUNCTION consultarProductosMasVendidos RETURN SYS_REFCURSOR
+    AS
+        CURSOR_PRODUCTOS_MAS_VENDIDOS SYS_REFCURSOR;
+    BEGIN
+        OPEN CURSOR_PRODUCTOS_MAS_VENDIDOS FOR
+            SELECT p.idProducto, p.descripcion, SUM(dv.cantidad) AS total_vendido
+            FROM DetalleDeVentas dv
+            JOIN PRODUCTOS p 
+            ON dv.idProducto = p.idProducto
+            GROUP BY p.idProducto, p.descripcion
+            ORDER BY total_vendido DESC;
+        RETURN CURSOR_PRODUCTOS_MAS_VENDIDOS;
+    END;
 END;
 /
 
@@ -214,7 +228,7 @@ IS
             FROM ENVIOS
             WHERE idEnvio = XidEnvio;
     RETURN CURSOR_ENVIO;
-    END;
+    END;    
 END;
 /
 
@@ -428,6 +442,7 @@ EXCEPTION
         ROLLBACK;
         RAISE_APPLICATION_ERROR(-20022, 'Error al modificar el cliente');
     END;
+    --
     FUNCTION ConsultarValoracionesBajas RETURN SYS_REFCURSOR
     AS
         CURSOR_VALORACIONES SYS_REFCURSOR;

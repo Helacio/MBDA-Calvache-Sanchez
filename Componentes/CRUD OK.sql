@@ -18,7 +18,7 @@ FROM PRODUCTOS;
 
 -- Consultar productos NO CAMELLA
 VARIABLE elCursor REFCURSOR;
-EXECUTE :elCursor := PKG_Productos.consultarProductos(NULL); 
+EXECUTE :elCursor := PKG_Productos.consultarProductos; 
 PRINT elCursor;
 
 -- PAQUETE DE VENTAS
@@ -169,7 +169,7 @@ END;
 
 -- Consultar valoraciones bajas
 VARIABLE elCursor REFCURSOR;
-EXECUTE :elCursor := PKG_Clientes.ConsultarValoracionesBajas(NULL);
+EXECUTE :elCursor := PKG_Clientes.ConsultarValoracionesBajas;
 PRINT elCursor;
 
 
