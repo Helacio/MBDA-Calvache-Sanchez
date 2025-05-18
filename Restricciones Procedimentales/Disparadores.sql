@@ -264,7 +264,7 @@ CREATE TRIGGER TG_Sedes
     FOR EACH ROW
 DECLARE
     max_id_sedes INTEGER;
-BEGIN
+BEGIN 
     IF INSERTING THEN
         -- Generar ID automáticamente
         SELECT NVL(MAX(idSede), 0) + 1 INTO max_id_sedes FROM SEDES;

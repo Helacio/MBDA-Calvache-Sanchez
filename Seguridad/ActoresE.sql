@@ -1,0 +1,5 @@
+-- PK ADMINISTRADOR
+CREATE OR REPLACE PACKAGE ADMINISTRADOR IS
+    PROCEDURE co_ventas_totales_mes();
+    PROCEDURE co_mejor_proovedor_producto(EMPTY VARCHAR);
+    PROCEDURE co
