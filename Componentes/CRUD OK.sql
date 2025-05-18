@@ -23,11 +23,11 @@ PRINT elCursor;
 
 -- PAQUETE DE VENTAS
 
--- Adicionar venta (Para que camelle el segundo atributo debe estar en la tabla de clientes, FACTURA DEBVE EXISTIR)
+-- Adicionar venta
 BEGIN
     PKG_Ventas.adicionarVenta(SYSDATE, 2, 10000, 4 , NULL);
 END;
-
+SELECT * FROM VENTAS;
 -- Adicionar Detalle Venta
 BEGIN
     PKG_Ventas.adicionarDetalleVenta('RMA78', 2, 78000, 4);
@@ -38,14 +38,14 @@ BEGIN
     PKG_Ventas.adicionarFactura(SYSDATE);
 END;
 
--- Adicionar factura electronica(ESTARIA BIEN CREAR EL IDFACTURA AUTOMAT)
+-- Adicionar factura electronica
 BEGIN
-    PKG_Ventas.adicionarFacturaElectronica('juachitohermosito@gmail.com', 'Alpina', 4);
+    PKG_Ventas.adicionarFacturaElectronica('juachitohermosito@gmail.com', 'Alpina', 32);
 END;
 
--- Adicionar fctura fisica
+-- Adicionar factura fisica
 BEGIN
-    PKG_Ventas.adicionarFacturaFisica('312487265', 3);
+    PKG_Ventas.adicionarFacturaFisica('312487265', 33);
 END;
 
 -- Adicionar envio
