@@ -25,7 +25,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_Productos IS
         RAISE_APPLICATION_ERROR(-20030, 'Error al modificar el producto');
     END;
     --
-    FUNCTION consultarProductos(EMPTY VARCHAR) RETURN SYS_REFCURSOR
+    FUNCTION consultarProductos RETURN SYS_REFCURSOR
     AS
         CURSOR_PRODUCTOS SYS_REFCURSOR;
     BEGIN
@@ -194,7 +194,7 @@ IS
 	    RETURN CURSOR_FACTURA;
     END;
     --
-    FUNCTION consultarVentasMes(EMPTY VARCHAR) RETURN SYS_REFCURSOR
+    FUNCTION consultarVentasMes RETURN SYS_REFCURSOR
     AS
         CURSOR_VENTAS SYS_REFCURSOR;
     BEGIN
@@ -203,6 +203,17 @@ IS
             FROM VENTAS
             WHERE EXTRACT(MONTH FROM fecha) = EXTRACT(MONTH FROM SYSDATE);
         RETURN CURSOR_VENTAS;
+    END;
+    --
+    FUNCTION consultarEnvio(XidEnvio INTEGER) RETURN SYS_REFCURSOR
+    AS
+        CURSOR_ENVIO SYS_REFCURSOR;
+    BEGIN
+        OPEN CURSOR_ENVIO FOR
+            SELECT idEnvio, fechaEnvio, empresaTransporte, estado, direccionEnvio
+            FROM ENVIOS
+            WHERE idEnvio = XidEnvio;
+    RETURN CURSOR_ENVIO;
     END;
 END;
 /
@@ -280,6 +291,17 @@ CREATE OR REPLACE PACKAGE BODY PKG_Pedidos IS
             WHERE idPedido = xidPedido;
         RETURN CURSOR_DETALLE_PEDIDO;
     END;
+    --
+    FUNCTION consultarPedidosPendientesProveedor RETURN SYS_REFCURSOR
+    AS
+        CURSOR_PEDIDOS_PENDIENTES SYS_REFCURSOR;
+    BEGIN
+        OPEN CURSOR_PEDIDOS_PENDIENTES FOR
+            SELECT idPedido, fecha, idProveedor, idEmpleado
+            FROM PEDIDOS
+            WHERE estado = 'P';
+        RETURN CURSOR_PEDIDOS_PENDIENTES;
+    END;
 END;
 /
 
@@ -335,7 +357,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_Proveedores IS
         RAISE_APPLICATION_ERROR(-20019, 'Error al modificar los precios');
     END;
     --
-    FUNCTION consultarPrecios(XidProducto VARCHAR) RETURN SYS_REFCURSOR
+    FUNCTION consultarPrecioProducto(XidProducto VARCHAR) RETURN SYS_REFCURSOR
     AS
         CURSOR_PRECIOS SYS_REFCURSOR;
     BEGIN
@@ -345,7 +367,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_Proveedores IS
             WHERE idProducto = XidProducto;
         RETURN CURSOR_PRECIOS;
     END;
-    FUNCTION consultarProveedores(EMPTY VARCHAR) RETURN SYS_REFCURSOR
+    FUNCTION consultarProveedores RETURN SYS_REFCURSOR
     AS
         CURSOR_PROVEEDORES SYS_REFCURSOR;
     BEGIN
@@ -353,6 +375,18 @@ CREATE OR REPLACE PACKAGE BODY PKG_Proveedores IS
             SELECT *
             FROM PROVEEDORES;
         RETURN CURSOR_PROVEEDORES;
+    END;
+    --
+    FUNCTION consultarMejorProveedorProducto(XidProducto VARCHAR) RETURN SYS_REFCURSOR
+    AS
+        CURSOR_MEJOR_PROVEEDOR SYS_REFCURSOR;
+    BEGIN
+        OPEN CURSOR_MEJOR_PROVEEDOR FOR
+            SELECT idProveedor, idProducto, precio
+            FROM PRECIOS
+            WHERE idProducto = XidProducto
+            ORDER BY precio ASC;
+        RETURN CURSOR_MEJOR_PROVEEDOR;
     END;
 END;
 /
@@ -394,7 +428,7 @@ EXCEPTION
         ROLLBACK;
         RAISE_APPLICATION_ERROR(-20022, 'Error al modificar el cliente');
     END;
-    FUNCTION ConsultarValoracionesBajas(EMPTY VARCHAR) RETURN SYS_REFCURSOR
+    FUNCTION ConsultarValoracionesBajas RETURN SYS_REFCURSOR
     AS
         CURSOR_VALORACIONES SYS_REFCURSOR;
     BEGIN
@@ -404,6 +438,17 @@ EXCEPTION
             JOIN PRODUCTOS PRO ON PRO.idProducto = V.idProducto
             ORDER BY calificacion ASC;
         RETURN CURSOR_VALORACIONES;
+    END;
+    --
+    FUNCTION consultarCliente(Xnumero INTEGER) RETURN SYS_REFCURSOR
+    AS
+        CURSOR_CLIENTE SYS_REFCURSOR;
+    BEGIN
+        OPEN CURSOR_CLIENTE FOR
+            SELECT idCliente, tipo, numero, nombre, direccion, telefono, correo, fechaNacimiento
+            FROM CLIENTES
+            WHERE numero = Xnumero;
+        RETURN CURSOR_CLIENTE;
     END;
 END;
 /
