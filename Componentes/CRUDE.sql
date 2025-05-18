@@ -21,6 +21,7 @@ CREATE OR REPLACE PACKAGE PKG_Ventas IS
     FUNCTION consultarVenta(XidVenta INTEGER) RETURN SYS_REFCURSOR;
     FUNCTION consultarDetalleVenta(XidDetalle INTEGER) RETURN SYS_REFCURSOR;
     FUNCTION consultarFactura(XidFactura INTEGER)RETURN SYS_REFCURSOR;
+    FUNCTION consultarVentasMes(EMPTY VARCHAR) RETURN SYS_REFCURSOR;
 END PKG_Ventas;
 /
 
@@ -42,6 +43,7 @@ CREATE OR REPLACE PACKAGE PKG_Proveedores IS
     PROCEDURE modificarProveedor(XidProveedor INTEGER, Xnombre VARCHAR, Xdireccion VARCHAR, Xtelefono VARCHAR, Xcorreo VARCHAR);
     PROCEDURE modificarPrecios(XidProveedor INTEGER, XidProducto VARCHAR, Xprecio INTEGER);
     FUNCTION consultarPrecios(XidProducto VARCHAR) RETURN SYS_REFCURSOR;
+    FUNCTION consultarProveedores(EMPTY VARCHAR) RETURN SYS_REFCURSOR;
 END PKG_Proveedores;
 /
 

@@ -193,6 +193,17 @@ IS
 		    WHERE idFactura = XidFactura;
 	    RETURN CURSOR_FACTURA;
     END;
+    --
+    FUNCTION consultarVentasMes(EMPTY VARCHAR) RETURN SYS_REFCURSOR
+    AS
+        CURSOR_VENTAS SYS_REFCURSOR;
+    BEGIN
+        OPEN CURSOR_VENTAS FOR
+            SELECT idVenta, fecha, idCliente, idEmpleado, idFactura, idEnvio
+            FROM VENTAS
+            WHERE EXTRACT(MONTH FROM fecha) = EXTRACT(MONTH FROM SYSDATE);
+        RETURN CURSOR_VENTAS;
+    END;
 END;
 /
 
@@ -333,6 +344,15 @@ CREATE OR REPLACE PACKAGE BODY PKG_Proveedores IS
             FROM PRECIOS
             WHERE idProducto = XidProducto;
         RETURN CURSOR_PRECIOS;
+    END;
+    FUNCTION consultarProveedores(EMPTY VARCHAR) RETURN SYS_REFCURSOR
+    AS
+        CURSOR_PROVEEDORES SYS_REFCURSOR;
+    BEGIN
+        OPEN CURSOR_PROVEEDORES FOR
+            SELECT *
+            FROM PROVEEDORES;
+        RETURN CURSOR_PROVEEDORES;
     END;
 END;
 /
