@@ -1,3 +1,10 @@
+/* SQL PROYECTO
+    Felipe Calvache - Hernan Sanchez
+*/
+
+
+-- CRUDI
+
 -- Paquete de Productos
 CREATE OR REPLACE PACKAGE BODY PKG_Productos IS
     PROCEDURE adicionarProducto(descripcion VARCHAR, precioCompra INTEGER, precioVenta INTEGER)
@@ -25,7 +32,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_Productos IS
         RAISE_APPLICATION_ERROR(-20030, 'Error al modificar el producto');
     END;
     --
-    FUNCTION consultarProductos(EMPTY VARCHAR) RETURN SYS_REFCURSOR
+    FUNCTION consultarProductos RETURN SYS_REFCURSOR
     AS
         CURSOR_PRODUCTOS SYS_REFCURSOR;
     BEGIN
@@ -33,6 +40,20 @@ CREATE OR REPLACE PACKAGE BODY PKG_Productos IS
             SELECT *
             FROM PRODUCTOS;
         RETURN CURSOR_PRODUCTOS;
+    END;
+    --
+    FUNCTION consultarProductosMasVendidos RETURN SYS_REFCURSOR
+    AS
+        CURSOR_PRODUCTOS_MAS_VENDIDOS SYS_REFCURSOR;
+    BEGIN
+        OPEN CURSOR_PRODUCTOS_MAS_VENDIDOS FOR
+            SELECT p.idProducto, p.descripcion, SUM(dv.cantidad) AS total_vendido
+            FROM DetalleDeVentas dv
+            JOIN PRODUCTOS p 
+            ON dv.idProducto = p.idProducto
+            GROUP BY p.idProducto, p.descripcion
+            ORDER BY total_vendido DESC;
+        RETURN CURSOR_PRODUCTOS_MAS_VENDIDOS;
     END;
 END;
 /
@@ -193,6 +214,28 @@ IS
 		    WHERE idFactura = XidFactura;
 	    RETURN CURSOR_FACTURA;
     END;
+    --
+    FUNCTION consultarVentasMes RETURN SYS_REFCURSOR
+    AS
+        CURSOR_VENTAS SYS_REFCURSOR;
+    BEGIN
+        OPEN CURSOR_VENTAS FOR
+            SELECT idVenta, fecha, idCliente, idEmpleado, idFactura, idEnvio
+            FROM VENTAS
+            WHERE EXTRACT(MONTH FROM fecha) = EXTRACT(MONTH FROM SYSDATE);
+        RETURN CURSOR_VENTAS;
+    END;
+    --
+    FUNCTION consultarEnvio(XidEnvio INTEGER) RETURN SYS_REFCURSOR
+    AS
+        CURSOR_ENVIO SYS_REFCURSOR;
+    BEGIN
+        OPEN CURSOR_ENVIO FOR
+            SELECT idEnvio, fechaEnvio, empresaTransporte, estado, direccionEnvio
+            FROM ENVIOS
+            WHERE idEnvio = XidEnvio;
+    RETURN CURSOR_ENVIO;
+    END;    
 END;
 /
 
@@ -269,12 +312,23 @@ CREATE OR REPLACE PACKAGE BODY PKG_Pedidos IS
             WHERE idPedido = xidPedido;
         RETURN CURSOR_DETALLE_PEDIDO;
     END;
+    --
+    FUNCTION consultarPedidosPendientesProveedor RETURN SYS_REFCURSOR
+    AS
+        CURSOR_PEDIDOS_PENDIENTES SYS_REFCURSOR;
+    BEGIN
+        OPEN CURSOR_PEDIDOS_PENDIENTES FOR
+            SELECT idPedido, fecha, idProveedor, idEmpleado
+            FROM PEDIDOS
+            WHERE estado = 'P';
+        RETURN CURSOR_PEDIDOS_PENDIENTES;
+    END;
 END;
 /
 
 -- Paquete de Proveedores
 CREATE OR REPLACE PACKAGE BODY PKG_Proveedores IS
-    PROCEDURE adionarProveedor(nombre VARCHAR, direccion VARCHAR, telefono VARCHAR, correo VARCHAR)
+    PROCEDURE adicionarProveedor(nombre VARCHAR, direccion VARCHAR, telefono VARCHAR, correo VARCHAR)
     IS
     BEGIN
         INSERT INTO PROVEEDORES(nombre, direccion, telefono, correo)
@@ -324,7 +378,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_Proveedores IS
         RAISE_APPLICATION_ERROR(-20019, 'Error al modificar los precios');
     END;
     --
-    FUNCTION consultarPrecios(XidProducto VARCHAR) RETURN SYS_REFCURSOR
+    FUNCTION consultarPrecioProducto(XidProducto VARCHAR) RETURN SYS_REFCURSOR
     AS
         CURSOR_PRECIOS SYS_REFCURSOR;
     BEGIN
@@ -333,6 +387,27 @@ CREATE OR REPLACE PACKAGE BODY PKG_Proveedores IS
             FROM PRECIOS
             WHERE idProducto = XidProducto;
         RETURN CURSOR_PRECIOS;
+    END;
+    FUNCTION consultarProveedores RETURN SYS_REFCURSOR
+    AS
+        CURSOR_PROVEEDORES SYS_REFCURSOR;
+    BEGIN
+        OPEN CURSOR_PROVEEDORES FOR
+            SELECT *
+            FROM PROVEEDORES;
+        RETURN CURSOR_PROVEEDORES;
+    END;
+    --
+    FUNCTION consultarMejorProveedorProducto(XidProducto VARCHAR) RETURN SYS_REFCURSOR
+    AS
+        CURSOR_MEJOR_PROVEEDOR SYS_REFCURSOR;
+    BEGIN
+        OPEN CURSOR_MEJOR_PROVEEDOR FOR
+            SELECT idProveedor, idProducto, precio
+            FROM PRECIOS
+            WHERE idProducto = XidProducto
+            ORDER BY precio ASC;
+        RETURN CURSOR_MEJOR_PROVEEDOR;
     END;
 END;
 /
@@ -345,7 +420,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_Clientes IS
         INSERT INTO CLIENTES(tipo, numero, nombre, direccion, telefono, correo, fechaNacimiento)
         VALUES (tipo, numero, nombre, direccion, telefono, correo, fechaNacimiento);
         COMMIT;
-    EXCEPTION
+EXCEPTION
     WHEN OTHERS THEN
         ROLLBACK;
         RAISE_APPLICATION_ERROR(-20020, 'Error al adicionar el cliente');
@@ -362,7 +437,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_Clientes IS
         ROLLBACK;
         RAISE_APPLICATION_ERROR(-20021, 'Error al adicionar la valoracion');
     END;
-    PROCEDURE modificarCliente(Xcedula INTEGER, Xtipo CHAR, Xtelefono VARCHAR, Xdireccion VARCHAR, Xcorreo VARCHAR)
+    PROCEDURE modificarCliente(Xcedula INTEGER, Xtipo VARCHAR, Xtelefono VARCHAR, Xdireccion VARCHAR, Xcorreo VARCHAR)
     IS
     BEGIN
         UPDATE CLIENTES
@@ -374,7 +449,8 @@ CREATE OR REPLACE PACKAGE BODY PKG_Clientes IS
         ROLLBACK;
         RAISE_APPLICATION_ERROR(-20022, 'Error al modificar el cliente');
     END;
-    FUNCTION ConsultarValoracionesBajas(EMPTY VARCHAR) RETURN SYS_REFCURSOR
+    --
+    FUNCTION ConsultarValoracionesBajas RETURN SYS_REFCURSOR
     AS
         CURSOR_VALORACIONES SYS_REFCURSOR;
     BEGIN
@@ -384,6 +460,17 @@ CREATE OR REPLACE PACKAGE BODY PKG_Clientes IS
             JOIN PRODUCTOS PRO ON PRO.idProducto = V.idProducto
             ORDER BY calificacion ASC;
         RETURN CURSOR_VALORACIONES;
+    END;
+    --
+    FUNCTION consultarCliente(Xnumero INTEGER) RETURN SYS_REFCURSOR
+    AS
+        CURSOR_CLIENTE SYS_REFCURSOR;
+    BEGIN
+        OPEN CURSOR_CLIENTE FOR
+            SELECT idCliente, tipo, numero, nombre, direccion, telefono, correo, fechaNacimiento
+            FROM CLIENTES
+            WHERE numero = Xnumero;
+        RETURN CURSOR_CLIENTE;
     END;
 END;
 /
@@ -402,11 +489,11 @@ CREATE OR REPLACE PACKAGE BODY PKG_Empleados IS
         RAISE_APPLICATION_ERROR(-20023, 'Error al adicionar el empleado');
     END;
     --
-    PROCEDURE adicionarSede(idSede INTEGER, direccion VARCHAR)
+    PROCEDURE adicionarSede(direccion VARCHAR)
     IS
     BEGIN
-        INSERT INTO SEDES(idSede, direccion)
-        VALUES (idSede, direccion);
+        INSERT INTO SEDES(direccion)
+        VALUES (direccion);
         COMMIT;
     EXCEPTION
     WHEN OTHERS THEN

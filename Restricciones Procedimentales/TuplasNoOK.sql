@@ -16,3 +16,8 @@ INSERT INTO CLIENTES VALUES (4, 'CC', '2001064920', 'Cesar Ramos', NULL, '322778
 /* 3) Definimos que si el cliente es una empresa la direccion no puede ser NULA
     CK_tipo_direccion   */
 INSERT INTO CLIENTES VALUES (5, 'NIT', '3001562920', 'Sara Gomez', NULL, '322778998', 'saragomez@hotmail.com', TO_DATE('2003-03-01', 'YYYY-MM-DD'));
+
+/* 4) Definimos que el precio de compra debe ser menor al precio de venta
+    CK_compra_venta    */
+INSERT INTO PRODUCTOS VALUES ('VAH64', 'Vodka Absolut Azul 700 ml', 10000, 7000);
+
