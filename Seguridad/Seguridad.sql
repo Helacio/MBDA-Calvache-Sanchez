@@ -36,6 +36,6 @@ TO Cliente;
 
 -- Analista de Negocio
 GRANT EXECUTE
-ON PKG_PKG_ANALISTA_NEGOCIOS
+ON PKG_ANALISTA_NEGOCIOS
 TO Analista_de_negocios;
 
