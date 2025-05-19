@@ -1,3 +1,10 @@
+/* SQL PROYECTO
+    Felipe Calvache - Hernan Sanchez
+*/
+
+
+-- XCRUD
+
 DROP PACKAGE PKG_Productos;
 DROP PACKAGE PKG_Ventas;
 DROP PACKAGE PKG_Pedidos;

@@ -1,3 +1,10 @@
+/* SQL PROYECTO
+    Felipe Calvache - Hernan Sanchez
+*/
+
+
+-- CRUDI
+
 -- Paquete de Productos
 CREATE OR REPLACE PACKAGE BODY PKG_Productos IS
     PROCEDURE adicionarProducto(descripcion VARCHAR, precioCompra INTEGER, precioVenta INTEGER)
