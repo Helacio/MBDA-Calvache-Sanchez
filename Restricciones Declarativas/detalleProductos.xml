@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE detalle_xml SYSTEM "detalleProductos.dtd">
-
-<detalle_xml>
-    <paisOrigen>Colombia</paisOrigen>
-    <alcohol>35</alcohol>
-    <lote>ZX-21</lote>
-    <fechaElaboracion fecha="2023-10-01" hora="12:00"/>
-</detalle_xml>
