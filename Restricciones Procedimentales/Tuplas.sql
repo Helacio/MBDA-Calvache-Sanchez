@@ -5,7 +5,7 @@
 
 -- Tuplas
 
---Si el estado del envio = 'C' entonces empresaTransporte = null
+-- Si el estado del envio = 'C' entonces empresaTransporte = null
 ALTER TABLE ENVIOS
 ADD CONSTRAINT CK_estado_transporte CHECK (NOT (estado = 'C' AND empresaTransporte IS NOT NULL));
 
@@ -13,6 +13,11 @@ ADD CONSTRAINT CK_estado_transporte CHECK (NOT (estado = 'C' AND empresaTranspor
 ALTER TABLE CLIENTES
 ADD CONSTRAINT CK_tipo_numero CHECK ((tipo <> 'CC') OR (numero LIKE '1%'));
 
--- Si el cliente es una empresa entonces la direcciOn no puede ser desconocida
+-- Si el cliente es una empresa entonces la direccion no puede ser desconocida
 ALTER TABLE CLIENTES
 ADD CONSTRAINT CK_tipo_direccion CHECK (NOT (tipo = 'NIT' AND direccion IS NULL));
+
+-- Valida que al insertar el precio de Venta sea mayor a su costo
+ALTER TABLE PRODUCTOS
+ADD CONSTRAINT CK_compra_venta CHECK (precioCompra < precioVenta);
+
