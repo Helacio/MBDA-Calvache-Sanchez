@@ -50,13 +50,13 @@ ADD CONSTRAINT CK_Tconsecutivo_sedes CHECK (idSede > 0);
 
 -- Tcorreo
 ALTER TABLE PROVEEDORES
-ADD CONSTRAINT CK_Tcorreo_proveedores CHECK (correo LIKE '%@%.%');
+ADD CONSTRAINT CK_Tcorreo_proveedores CHECK (REGEXP_LIKE(correo, '^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$'));
 
 ALTER TABLE CLIENTES
-ADD CONSTRAINT CK_Tcorreo_clientes CHECK (correo LIKE '%@%.%');
+ADD CONSTRAINT CK_Tcorreo_clientes CHECK (REGEXP_LIKE(correo, '^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$'));
 
 ALTER TABLE ELECTRONICAS
-ADD CONSTRAINT CK_Tcorreo_electronicas CHECK (correo LIKE '%@%.%');
+ADD CONSTRAINT CK_Tcorreo_electronicas CHECK (REGEXP_LIKE(correo, '^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$'));
 
 -- Templeado
 ALTER TABLE EMPLEADOS
