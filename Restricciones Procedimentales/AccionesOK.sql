@@ -30,6 +30,9 @@ FROM CLIENTES;
 SELECT *
 FROM VALORACIONES;
 
+-- Se eliminan primero las ventas asociadas al cliente para poder eliminarlo
+DELETE FROM VENTAS WHERE idCliente = 1;
+
 DELETE FROM CLIENTES WHERE idCliente = 1;
 
 -- 4)

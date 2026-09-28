@@ -21,7 +21,7 @@ ADD CONSTRAINT FK_DetalleDeVentas_ventas FOREIGN KEY (idVenta) REFERENCES VENTAS
 ALTER TABLE DetalleDePedidos
 ADD CONSTRAINT FK_DetalleDePedidos_pedidos FOREIGN KEY (idPedido) REFERENCES PEDIDOS(idPedido) ON DELETE CASCADE;
 
--- Si eliminamos un cliente queremos que su valoracion asociada quede desconocida
+-- Si eliminamos un cliente, tambien se deben eliminar sus valoraciones asociadas
 ALTER TABLE VALORACIONES
 ADD CONSTRAINT FK_valoraciones_clientes FOREIGN KEY (idCliente) REFERENCES CLIENTES(idCliente) ON DELETE CASCADE;
 

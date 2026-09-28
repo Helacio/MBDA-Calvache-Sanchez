@@ -265,11 +265,11 @@ CREATE OR REPLACE PACKAGE BODY PKG_Pedidos IS
         RAISE_APPLICATION_ERROR(-20013, 'Error al adicionar el detalle del pedido');
     END;
     --
-    PROCEDURE modificarPedido(XidPedido INTEGER, estado CHAR)
+    PROCEDURE modificarPedido(XidPedido INTEGER, Xestado CHAR)
     IS
     BEGIN
         UPDATE PEDIDOS
-        SET estado = estado
+        SET estado = Xestado
         WHERE idPedido = XidPedido;
         COMMIT;
     EXCEPTION

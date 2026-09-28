@@ -165,7 +165,7 @@ END;
 
 -- Consultar precios
 VARIABLE elCursor REFCURSOR;
-EXECUTE :elCursor := PKG_Proveedores.consultarPrecios('RMA78');
+EXECUTE :elCursor := PKG_Proveedores.consultarPrecioProducto('RMA78');
 PRINT elCursor;
 
 

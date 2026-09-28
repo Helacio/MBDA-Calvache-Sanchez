@@ -452,38 +452,10 @@ INSERT INTO ELECTRONICAS VALUES ('eduardosanchez@correo.net', 'ElectronicsPlus',
 INSERT INTO ELECTRONICAS VALUES ('patricialopez@negocio.com', 'TecnoSoluciones', 13);
 INSERT INTO ELECTRONICAS VALUES ('ricardotorres@servicio.org', 'E-Mercado', 14);
 INSERT INTO ELECTRONICAS VALUES ('mariafernandez@trabajo.net', 'DistribucionElectro', 15);
-INSERT INTO ELECTRONICAS VALUES ('fernandorios@empresa.com', 'ElectroTech', 16);
-INSERT INTO ELECTRONICAS VALUES ('andreachavez@negocio.org', 'Soluciones Digitales', 17);
-INSERT INTO ELECTRONICAS VALUES ('sebastianvelez@correo.net', 'DigitalElectronics', 18);
-INSERT INTO ELECTRONICAS VALUES ('valentinaduarte@servicio.com', 'ElectroVentura', 19);
-INSERT INTO ELECTRONICAS VALUES ('danielmora@trabajo.org', 'ElectroMarket', 20);
-INSERT INTO ELECTRONICAS VALUES ('camilavargas@negocio.net', 'Distribuciones Tecno', 21);
-INSERT INTO ELECTRONICAS VALUES ('alejandronavarro@correo.com', 'ElectroGlobal', 22);
-INSERT INTO ELECTRONICAS VALUES ('nataliaparedes@servicio.org', 'TechExpress', 23);
-INSERT INTO ELECTRONICAS VALUES ('felipecorrea@trabajo.net', 'ElectroShop', 24);
-INSERT INTO ELECTRONICAS VALUES ('lorenasalazar@empresa.com', 'E-Tienda', 25);
-INSERT INTO ELECTRONICAS VALUES ('rodrigoquintero@negocio.org', 'ElectroDistribucion', 26);
-INSERT INTO ELECTRONICAS VALUES ('estebanmontes@correo.net', 'ElectroServicios', 27);
-INSERT INTO ELECTRONICAS VALUES ('paolaguzman@servicio.com', 'ElectroSoluciones', 28);
-INSERT INTO ELECTRONICAS VALUES ('oscarrincon@trabajo.net', 'DigitalDistribucion', 29);
-INSERT INTO ELECTRONICAS VALUES ('gabrielarivera@negocio.org', 'Tecnologia y Mas', 30);
 
 -- FISICAS
-INSERT INTO FISICAS VALUES ('3145550837', 3);
-INSERT INTO FISICAS VALUES ('3145551837', 2);
-INSERT INTO FISICAS VALUES ('3145552837', 1);
 INSERT INTO FISICAS VALUES ('3145559837', 4);
 INSERT INTO FISICAS VALUES ('3213333911', 5);
-INSERT INTO FISICAS VALUES ('3208456712', 6);
-INSERT INTO FISICAS VALUES ('3017864532', 7);
-INSERT INTO FISICAS VALUES ('3159023471', 8);
-INSERT INTO FISICAS VALUES ('3187654012', 9);
-INSERT INTO FISICAS VALUES ('3109872345', 10);
-INSERT INTO FISICAS VALUES ('3045678901', 11);
-INSERT INTO FISICAS VALUES ('3178902345', 12);
-INSERT INTO FISICAS VALUES ('3112346789', 13);
-INSERT INTO FISICAS VALUES ('3009876543', 14);
-INSERT INTO FISICAS VALUES ('3198765432', 15);
 INSERT INTO FISICAS VALUES ('3123456780', 16);
 INSERT INTO FISICAS VALUES ('3224567890', 17);
 INSERT INTO FISICAS VALUES ('3167890123', 18);

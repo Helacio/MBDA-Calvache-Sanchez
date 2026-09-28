@@ -224,7 +224,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_CLIENTE IS
     PROCEDURE ad_envio(fechaEnvio DATE, empresaTransporte VARCHAR, estado CHAR, direccionEnvio VARCHAR)
     IS
     BEGIN
-        ad_envio(fechaEnvio, empresaTransporte, estado, direccionEnvio);
+        PKG_Ventas.adicionarEnvio(fechaEnvio, empresaTransporte, estado, direccionEnvio);
     END;
     --
     FUNCTION co_productos RETURN SYS_REFCURSOR

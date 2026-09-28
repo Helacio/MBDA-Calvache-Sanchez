@@ -16,11 +16,13 @@ JOIN PROVEEDORES pr ON pe.idProveedor = pr.idProveedor
 WHERE pe.estado = 'P';
 
 -- Consultar mejor proveedor para cada producto
-SELECT PRO.idProveedor, PRO.nombre, P.descripcion, MIN(PRE.precio) AS PrecioMinimo
+SELECT PRO.idProveedor, PRO.nombre, P.descripcion, PRE.precio AS PrecioMinimo
 FROM PROVEEDORES PRO
 JOIN PRECIOS PRE ON PRO.idProveedor = PRE.idProveedor
 JOIN PRODUCTOS P ON P.idProducto = PRE.idProducto
-GROUP BY PRO.idProveedor, PRO.nombre, P.descripcion;
+WHERE PRE.precio = (SELECT MIN(PRE2.precio)
+                    FROM PRECIOS PRE2
+                    WHERE PRE2.idProducto = P.idProducto);
 
 -- Consultar la lista de empleados
 SELECT *

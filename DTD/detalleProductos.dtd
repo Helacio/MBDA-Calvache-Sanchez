@@ -1,8 +1,12 @@
-<!ELEMENT detalle_xml (paisOrigen?, alcohol, lote, fechaElaboracion?)>
+<!ELEMENT detalle_xml (marca?, tipo?, paisOrigen?, alcohol, lote, fechaElaboracion?)>
+<!ELEMENT marca (#PCDATA)>
+<!ELEMENT tipo (#PCDATA)>
 <!ELEMENT paisOrigen (#PCDATA)>
 <!ELEMENT alcohol (#PCDATA)>
 <!ELEMENT lote (#PCDATA)>
+
 <!ELEMENT fechaElaboracion EMPTY>
 <!ATTLIST fechaElaboracion
     fecha CDATA #REQUIRED
     hora CDATA #REQUIRED>
+    

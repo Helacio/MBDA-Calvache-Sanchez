@@ -78,7 +78,7 @@ END;
 
 -- Productos
 CREATE TRIGGER TG_In_Productos
-    BEFORE INSERT OR DELETE
+    BEFORE INSERT OR UPDATE OR DELETE
     ON PRODUCTOS
     FOR EACH ROW
 DECLARE
@@ -86,11 +86,13 @@ DECLARE
     v_numeros VARCHAR(2);
     v_precio_min_compra INTEGER;
 BEGIN
-    -- Generar ID para nuevas productos
+    -- Generar ID para nuevos productos si no se especifica
     IF INSERTING THEN
-        v_letras := DBMS_RANDOM.STRING('U', 3);
-        v_numeros := LPAD(TRUNC(DBMS_RANDOM.VALUE(0, 100)), 2, '0');
-        :New.idProducto := v_letras || v_numeros;
+        IF :NEW.idProducto IS NULL THEN
+            v_letras := DBMS_RANDOM.STRING('U', 3);
+            v_numeros := LPAD(TRUNC(DBMS_RANDOM.VALUE(0, 100)), 2, '0');
+            :New.idProducto := v_letras || v_numeros;
+        END IF;
     END IF;
 
     -- Valida que al actualizar el nuevo precio de Venta sea mayor a su costo  
@@ -102,7 +104,7 @@ BEGIN
 
     -- No se pueden eliminar los productos
     IF DELETING THEN
-        RAISE_APPLICATION_ERROR(-200010, 'No se permiten eliminar productos');
+        RAISE_APPLICATION_ERROR(-20004, 'No se permiten eliminar productos');
     END IF;
 END;
 /
@@ -122,8 +124,10 @@ BEGIN
         SELECT NVL(MAX(idPedido), 0) + 1 INTO max_id_pedido FROM PEDIDOS;
         :NEW.idPedido := max_id_pedido;
         
-        -- Estado inicial 'P'
-        :NEW.estado := 'P';
+        -- Estado inicial 'P' si no se especifica
+        IF :NEW.estado IS NULL THEN
+            :NEW.estado := 'P';
+        END IF;
     ELSIF UPDATING THEN
 
         -- Calcular días pasados desde la fecha original
@@ -155,9 +159,11 @@ BEGIN
         SELECT NVL(MAX(idEnvio), 0) + 1 INTO max_id_envio FROM ENVIOS;
         :NEW.idEnvio := max_id_envio;
 
-        -- Generar costo aleatorio entre 5000 y 13000
-        costo := ROUND(DBMS_RANDOM.VALUE(5000, 13000));
-        :NEW.costoEnvio := costo;
+        -- Generar costo aleatorio entre 5000 y 13000 si no se especifica
+        IF :NEW.costoEnvio IS NULL OR :NEW.costoEnvio = 0 THEN
+            costo := ROUND(DBMS_RANDOM.VALUE(5000, 13000));
+            :NEW.costoEnvio := costo;
+        END IF;
     END IF;
 END;
 /
@@ -202,7 +208,7 @@ BEGIN
 
     IF DELETING THEN
         -- No se pueden eliminar los proveedores
-        RAISE_APPLICATION_ERROR(-200010, 'No se permite eliminar los proveedores antiguos');
+        RAISE_APPLICATION_ERROR(-20012, 'No se permite eliminar los proveedores antiguos');
     END IF;
 END;
 /
@@ -269,6 +275,39 @@ BEGIN
         -- Generar ID automáticamente
         SELECT NVL(MAX(idSede), 0) + 1 INTO max_id_sedes FROM SEDES;
         :NEW.idSede := max_id_sedes;
+    END IF;
+END;
+/
+
+-- FISICAS y ELECTRONICAS son disjuntas
+CREATE OR REPLACE TRIGGER TG_ELECTRONICAS
+    BEFORE INSERT OR UPDATE
+    ON ELECTRONICAS
+    FOR EACH ROW
+DECLARE
+    v_count INTEGER;
+BEGIN
+    SELECT COUNT(*) INTO v_count
+    FROM FISICAS
+    WHERE idFactura = :NEW.idFactura;
+    IF v_count > 0 THEN
+        RAISE_APPLICATION_ERROR(-20031, 'La factura ya está registrada como física');
+    END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TG_FISICAS
+    BEFORE INSERT OR UPDATE
+    ON FISICAS
+    FOR EACH ROW
+DECLARE
+    v_count INTEGER;
+BEGIN
+    SELECT COUNT(*) INTO v_count
+    FROM ELECTRONICAS
+    WHERE idFactura = :NEW.idFactura;
+    IF v_count > 0 THEN
+        RAISE_APPLICATION_ERROR(-20030, 'La factura ya está registrada como electrónica');
     END IF;
 END;
 /

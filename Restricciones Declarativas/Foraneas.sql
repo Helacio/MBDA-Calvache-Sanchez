@@ -8,6 +8,9 @@
 ALTER TABLE TipoProductos
 ADD CONSTRAINT FK_TipoProductos_proveedores FOREIGN KEY (idProveedor) REFERENCES PROVEEDORES(idProveedor);
 
+ALTER TABLE TipoProductos
+ADD CONSTRAINT FK_TipoProductos_productos FOREIGN KEY (tipoProducto) REFERENCES PRODUCTOS(idProducto);
+
 ALTER TABLE PRECIOS
 ADD CONSTRAINT FK_precios_proveedores FOREIGN KEY (idProveedor) REFERENCES PROVEEDORES(idProveedor);
 

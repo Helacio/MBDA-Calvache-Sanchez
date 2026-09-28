@@ -38,7 +38,7 @@ END PKG_Ventas;
 CREATE OR REPLACE PACKAGE PKG_Pedidos IS
     PROCEDURE adicionarPedido(fecha DATE, idProveedor INTEGER, idEmpleado INTEGER);
     PROCEDURE adicionarDetallePedido(cantidad INTEGER, precio INTEGER, idPedido INTEGER, idProducto VARCHAR);
-    PROCEDURE modificarPedido(XidPedido INTEGER, estado CHAR);
+    PROCEDURE modificarPedido(XidPedido INTEGER, Xestado CHAR);
     PROCEDURE modificarDetallePedido(xidDetalle INTEGER, XidProducto VARCHAR, Xcantidad INTEGER, Xprecio INTEGER);
     FUNCTION consultarPedido(XidPedido INTEGER) RETURN SYS_REFCURSOR;
     FUNCTION consultarDetallesPedidos(xidPedido INTEGER) RETURN SYS_REFCURSOR;
