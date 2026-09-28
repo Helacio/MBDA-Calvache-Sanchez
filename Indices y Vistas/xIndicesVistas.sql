@@ -9,6 +9,7 @@ DROP INDEX idx_producto_descripcion;
 DROP INDEX idx_valoracion_calificacion;
 DROP INDEX idx_pedidos_estado;
 DROP INDEX idx_ventas_fecha;
+DROP INDEX idx_productos_fechaVencimiento;
 
 DROP VIEW MejorProveedor;
 DROP VIEW pedidos_pendientes_proveedor;
@@ -16,4 +17,5 @@ DROP VIEW valoraciones_clientes;
 DROP VIEW list_empleados;
 DROP VIEW preciosXproducto;
 DROP VIEW productos_mas_vendidos;
+DROP VIEW productos_proximos_a_vencer;
 

@@ -21,3 +21,7 @@ CREATE INDEX idx_pedidos_estado
 CREATE INDEX idx_ventas_fecha 
     ON VENTAS (fecha);
 
+-- Indice en fechaVencimiento de PRODUCTOS, para poder consultar los productos que estan por vencer.
+CREATE INDEX idx_productos_fechaVencimiento
+    ON PRODUCTOS (fechaVencimiento);
+

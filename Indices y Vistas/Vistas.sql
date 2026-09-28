@@ -45,6 +45,9 @@ CREATE VIEW productos_mas_vendidos AS
     GROUP BY p.idProducto, p.descripcion
     ORDER BY total_vendido DESC;
 
-
-
+-- Vista que muestra los productos proximos a vencer (Menos de un mes)
+CREATE VIEW productos_proximos_a_vencer AS
+    SELECT idProducto, descripcion, fechaVencimiento
+    FROM PRODUCTOS
+    WHERE fechaVencimiento BETWEEN SYSDATE AND SYSDATE + 30;
 

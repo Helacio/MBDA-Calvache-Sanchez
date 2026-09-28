@@ -23,7 +23,8 @@ CREATE TABLE PRODUCTOS (
     descripcion VARCHAR(100) NOT NULL,
     precioCompra INTEGER NOT NULL,
     precioVenta INTEGER NOT NULL,
-    detalle_xml XMLTYPE
+    detalle_xml XMLTYPE,
+    fechaVencimiento DATE
 );
 
 CREATE TABLE PRECIOS (
